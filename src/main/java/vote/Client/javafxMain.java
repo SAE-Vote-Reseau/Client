@@ -1,8 +1,7 @@
 package vote.Client;
 
-public class main {
+public class javafxMain {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        AppVote.main(args);
     }
 }
-

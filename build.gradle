@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 group 'org.example'
@@ -10,7 +12,7 @@ repositories {
 }
 jar{
     manifest{
-        attributes 'Main-Class': 'vote.Client.main'
+        attributes 'Main-Class': 'vote.Client.AppVote'
     }
 }
 
@@ -22,3 +24,10 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+javafx {
+    version = "19"
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media', 'javafx.graphics']
+}
+
+mainClassName = 'vote.Client.AppVote'
