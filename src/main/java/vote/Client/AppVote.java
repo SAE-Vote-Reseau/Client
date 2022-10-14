@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+
 
 
 public class AppVote extends Application {
@@ -20,31 +22,30 @@ public class AppVote extends Application {
 
 
     Button btn2 = new Button();
-    Label lblVote = new Label("Voulez-vous doubler les rations de frite a la cantine?");
+    Label lblVote = new Label();
     HBox hBox = new HBox();
     VBox vBox = new VBox();
 
-    public AppVote() throws IOException {
-    }
+
 
     @Override
-    public void start(Stage primaryStage){
-        btn1.setText("Oui");
+    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
+        getSondage();
         btn1.setOnAction(e -> {
-switchscene( "OUI", primaryStage);
+            switchscene(btn1.getText(), primaryStage);
             try {
-                sendVote("OUI");
+                sendVote(1);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
         });
 
-        btn2.setText("Non");
+
         btn2.setOnAction(e -> {
-            switchscene( "NON", primaryStage);
+            switchscene(btn2.getText(), primaryStage);
             try {
-                sendVote("NON");
+                sendVote(0);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -56,7 +57,6 @@ switchscene( "OUI", primaryStage);
         btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
 
         StackPane root = new StackPane();
-
 
 
         vBox.getChildren().add(hBox);
@@ -71,9 +71,6 @@ switchscene( "OUI", primaryStage);
         vBox.setSpacing(70);
 
 
-
-
-
         primaryStage.setScene(new javafx.scene.Scene(root, 1100, 700));
         primaryStage.show();
     }
@@ -83,10 +80,11 @@ switchscene( "OUI", primaryStage);
     }
 
     public void switchscene(String value, Stage stage) {
-        Stage stage1= stage;
-        Label label = new Label("votre choix de vote est \"" + value+"\" !");
+        Stage stage1 = stage;
+        Label label = new Label("votre choix de vote est \"" + value + "\" !");
         label.setFont(new javafx.scene.text.Font(26));
-        label.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");;
+        label.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        ;
         StackPane root = new StackPane();
         root.getChildren().add(label);
         label.setAlignment(Pos.CENTER);
@@ -95,24 +93,50 @@ switchscene( "OUI", primaryStage);
         stage1.show();
     }
 
-    public void sendVote(String vote) throws IOException {
-    //envoie un vote au serveur
-        try{
+
+    public void sendVote(int choice) throws IOException {
+        //envoie un vote au serveur
+        try {
             //création d'un socket client
-            java.net.Socket socket = new java.net.Socket("127.0.0.1", 8080);
+            java.net.Socket socket = new java.net.Socket("127.0.0.1", 5565);
             //création d'un flux de sortie
             java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
             //écriture dans le flux de sortie
-            out.writeUTF(vote);
+            out.writeUTF(String.valueOf(choice));
             //fermeture du flux de sortie
             out.close();
             //fermeture du socket
             socket.close();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void getSondage() throws IOException, ClassNotFoundException {
+        java.net.Socket socket = new java.net.Socket("127.0.01", 5565);
+        java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
+
+        out.writeUTF("getSondage");
+        //recupère l'inputstream du socket
+        java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
+        //lit le message envoyé par le serveur
+        ArrayList<String> sondage = (ArrayList<String>) in.readObject();
+        //set les valeurs du sondage
+        btn1.setText(sondage.get(2));
+        btn2.setText(sondage.get(1));
+        lblVote.setText(sondage.get(0));
+        //fermeture du flux d'entrée
+        in.close();
+        //fermeture du flux de sortie
+        out.close();
+        socket.close();
+
+    }
+
+
+
+
 }
 
 

@@ -27,7 +27,7 @@ test {
 
 javafx {
     version = "19"
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media', 'javafx.graphics']
+    modules = ['javafx.controls', 'javafx.swing', 'javafx.media', 'javafx.graphics']
 }
 
 mainClassName = 'vote.Client.AppVote'
