@@ -1,8 +1,8 @@
 package vote.Client;
 
-import java.io.IOException;
+
 import java.net.Socket;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 
 import static java.lang.System.out;

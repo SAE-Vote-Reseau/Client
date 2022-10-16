@@ -58,9 +58,9 @@ public class AppVote extends Application {
 
         StackPane root = new StackPane();
 
-
-        vBox.getChildren().add(hBox);
         vBox.getChildren().add(lblVote);
+        vBox.getChildren().add(hBox);
+
         hBox.getChildren().addAll(btn1, btn2);
 
 
@@ -121,11 +121,12 @@ public class AppVote extends Application {
         //recupère l'inputstream du socket
         java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
         //lit le message envoyé par le serveur
-        ArrayList<String> sondage = (ArrayList<String>) in.readObject();
+        String[] sondage = (String[]) in.readObject();
         //set les valeurs du sondage
-        btn1.setText(sondage.get(2));
-        btn2.setText(sondage.get(1));
-        lblVote.setText(sondage.get(0));
+        lblVote.setText(sondage[0]);
+        btn1.setText(sondage[2]);
+        btn2.setText(sondage[1]);
+
         //fermeture du flux d'entrée
         in.close();
         //fermeture du flux de sortie
