@@ -12,13 +12,12 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-
 
 
 public class AppVote extends Application {
 
     Button btn1 = new Button();
+    StackPane root = new StackPane();
 
 
     Button btn2 = new Button();
@@ -30,48 +29,13 @@ public class AppVote extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
+        //recuperation du sondage
         getSondage();
-        btn1.setOnAction(e -> {
-            switchscene(btn1.getText(), primaryStage);
-            try {
-                sendVote(1);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        });
-
-
-        btn2.setOnAction(e -> {
-            switchscene(btn2.getText(), primaryStage);
-            try {
-                sendVote(0);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        lblVote.setFont(new javafx.scene.text.Font(26));
-        lblVote.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-
-        StackPane root = new StackPane();
-
-        vBox.getChildren().add(lblVote);
-        vBox.getChildren().add(hBox);
-
-        hBox.getChildren().addAll(btn1, btn2);
-
-
-        root.getChildren().add(vBox);
-        vBox.setAlignment(Pos.CENTER);
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(50);
-        vBox.setSpacing(70);
-
-
-        primaryStage.setScene(new javafx.scene.Scene(root, 1100, 700));
+        //init des boutons ainsi que leur actions
+        initButtons(primaryStage);
+        //init de la StackPane , des Hbox et Vbox
+        initPaneAndBox();
+        primaryStage.setScene(new Scene(root, 1100, 700));
         primaryStage.show();
     }
 
@@ -79,18 +43,16 @@ public class AppVote extends Application {
         launch();
     }
 
-    public void switchscene(String value, Stage stage) {
-        Stage stage1 = stage;
+    public void switchScene(String value, Stage stage) {
         Label label = new Label("votre choix de vote est \"" + value + "\" !");
         label.setFont(new javafx.scene.text.Font(26));
         label.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        ;
         StackPane root = new StackPane();
         root.getChildren().add(label);
         label.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 1100, 700);
-        stage1.setScene(scene);
-        stage1.show();
+        stage.setScene(scene);
+        stage.show();
     }
 
 
@@ -98,14 +60,14 @@ public class AppVote extends Application {
         //envoie un vote au serveur
         try {
             //création d'un socket client
-            java.net.Socket socket = new java.net.Socket("127.0.0.1", 5565);
+            Socket socket = new Socket("127.0.0.1", 5565);
             //création d'un flux de sortie
             java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
             //écriture dans le flux de sortie
             out.writeUTF(String.valueOf(choice));
-            //fermeture du flux de sortie
+            //Fermeture du flux de sortie
             out.close();
-            //fermeture du socket
+            //Fermeture du socket
             socket.close();
 
         } catch (IOException e) {
@@ -114,7 +76,7 @@ public class AppVote extends Application {
     }
 
     public void getSondage() throws IOException, ClassNotFoundException {
-        java.net.Socket socket = new java.net.Socket("127.0.01", 5565);
+        Socket socket = new Socket("127.0.01", 5565);
         java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
 
         out.writeUTF("getSondage");
@@ -136,6 +98,48 @@ public class AppVote extends Application {
     }
 
 
+    public void initButtons(Stage primaryStage){
+        btn1.setOnAction(e -> {
+            switchScene(btn1.getText(), primaryStage);
+            try {
+                sendVote(1);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        });
+
+
+        btn2.setOnAction(e -> {
+            switchScene(btn2.getText(), primaryStage);
+            try {
+                sendVote(0);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        lblVote.setFont(new javafx.scene.text.Font(26));
+        lblVote.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+
+    }
+
+    public void initPaneAndBox(){
+        vBox.getChildren().add(lblVote);
+        vBox.getChildren().add(hBox);
+
+        hBox.getChildren().addAll(btn1, btn2);
+
+
+        root.getChildren().add(vBox);
+        vBox.setAlignment(Pos.CENTER);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(50);
+        vBox.setSpacing(70);
+
+    }
 
 
 }
