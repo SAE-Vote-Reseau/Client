@@ -9,9 +9,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import vote.Urne.Sondage;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class AppVote extends Application {
@@ -25,6 +29,13 @@ public class AppVote extends Application {
     HBox hBox = new HBox();
     VBox vBox = new VBox();
 
+    //chiffrage
+    Random rdn = new Random();
+    ArrayList<BigInteger> cle = Emalgam.keyGeneration();
+    ArrayList<BigInteger> clePublique = Emalgam.getPublique(cle);
+    ArrayList<BigInteger> choix1 = Emalgam.chiffrer(1,clePublique);
+    ArrayList<BigInteger> choix2 = Emalgam.chiffrer(0,clePublique);
+
 
 
     @Override
@@ -33,6 +44,7 @@ public class AppVote extends Application {
         getSondage();
         //init des boutons ainsi que leur actions
         initButtons(primaryStage);
+
         //init de la StackPane , des Hbox et Vbox
         initPaneAndBox();
         primaryStage.setScene(new Scene(root, 1100, 700));
@@ -62,9 +74,10 @@ public class AppVote extends Application {
             //création d'un socket client
             Socket socket = new Socket("127.0.0.1", 5565);
             //création d'un flux de sortie
-            java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
+            java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
             //écriture dans le flux de sortie
             out.writeUTF(String.valueOf(choice));
+            out.flush();
             //Fermeture du flux de sortie
             out.close();
             //Fermeture du socket
@@ -77,17 +90,17 @@ public class AppVote extends Application {
 
     public void getSondage() throws IOException, ClassNotFoundException {
         Socket socket = new Socket("127.0.01", 5565);
-        java.io.DataOutputStream out = new java.io.DataOutputStream(socket.getOutputStream());
-
+        java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
         out.writeUTF("getSondage");
+        out.flush();
         //recupère l'inputstream du socket
         java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
         //lit le message envoyé par le serveur
-        String[] sondage = (String[]) in.readObject();
+        Sondage sondage = (Sondage) in.readObject();
         //set les valeurs du sondage
-        lblVote.setText(sondage[0]);
-        btn1.setText(sondage[2]);
-        btn2.setText(sondage[1]);
+        lblVote.setText(sondage.getConsigne());
+        btn1.setText(sondage.getChoix1());
+        btn2.setText(sondage.getChoix2());
 
         //fermeture du flux d'entrée
         in.close();
@@ -103,6 +116,7 @@ public class AppVote extends Application {
             switchScene(btn1.getText(), primaryStage);
             try {
                 sendVote(1);
+                System.out.println("vote crypté : "+choix1);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -114,6 +128,7 @@ public class AppVote extends Application {
             switchScene(btn2.getText(), primaryStage);
             try {
                 sendVote(0);
+                System.out.println("vote crypté : "+choix2);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

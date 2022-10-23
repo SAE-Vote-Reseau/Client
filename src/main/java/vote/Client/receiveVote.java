@@ -11,7 +11,7 @@ public class receiveVote {
     public static String questionSondage="Voulez-vous avoir le Cheese by Mcdo a 1 euro ?";
     public static String choix1 = "NON";
     public static String choix2 = "OUI";
-    public static ArrayList<String> VOTEPACKAGE = new ArrayList<String>();
+    public static ArrayList<String> VOTEPACKAGE = new ArrayList<>();
     static int i=0;
 
 
