@@ -1,33 +1,61 @@
 package vote.Client;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.StageStyle;
 import vote.Urne.Sondage;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 
 public class AppVote extends Application {
 
+
     Button btn1 = new Button();
     StackPane root = new StackPane();
+
+    StackPane StackVote = new StackPane();
 
 
     Button btn2 = new Button();
     Label lblVote = new Label();
+
+
     HBox hBox = new HBox();
     VBox vBox = new VBox();
+
+    HBox CircleHBouton = new HBox();
+    Button RedButton = new Button();
+    Button GreenButton = new Button();
+    Button YellowButton = new Button();
+
+    Button RefreshButton = new Button();
+
+    Circle redCircle = new Circle(9, Color.RED);
+    Circle greenCircle = new Circle(9, Color.GREEN);
+    Circle YellowCircle = new Circle(9, Color.YELLOW);
+
+    String ColorHex = "#191919";
+    String ColorStyle="#5F5AA2";
+
+    Image img = new Image("file:src/main/resources/blahaj.png");
+    ImageView logo = new ImageView(img);
 
     //chiffrage
     Random rdn = new Random();
@@ -42,12 +70,30 @@ public class AppVote extends Application {
     public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
         //recuperation du sondage
         getSondage();
+        initColorButton();
         //init des boutons ainsi que leur actions
-        initButtons(primaryStage);
+
 
         //init de la StackPane , des Hbox et Vbox
         initPaneAndBox();
-        primaryStage.setScene(new Scene(root, 1100, 700));
+
+
+
+        initButtons(primaryStage);
+
+
+
+
+        root.setStyle("-fx-background-radius: 25px;-fx-background-color: "+ColorHex+";-fx-effect: dropshadow(three-pass-box, "+ColorHex+", 18, 0.5, 0, 0);-fx-background-insets: 12;");
+
+        Scene MainScene = new Scene(root, 1100, 700, Color.TRANSPARENT);
+
+
+
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+
+        primaryStage.setScene(MainScene);
+        primaryStage.getIcons().add(new Image("file:src/main/resources/blahajLogo.png"));
         primaryStage.show();
     }
 
@@ -55,16 +101,17 @@ public class AppVote extends Application {
         launch();
     }
 
-    public void switchScene(String value, Stage stage) {
+    public void switchScene(String value) {
+        root.getChildren().remove(StackVote);
         Label label = new Label("votre choix de vote est \"" + value + "\" !");
         label.setFont(new javafx.scene.text.Font(26));
-        label.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        StackPane root = new StackPane();
+        label.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        root.setStyle("-fx-background-radius: 25px;-fx-background-color: "+ColorHex+";-fx-effect: dropshadow(three-pass-box, "+ColorHex+", 18, 0.5, 0, 0);-fx-background-insets: 12;");
         root.getChildren().add(label);
         label.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root, 1100, 700);
-        stage.setScene(scene);
-        stage.show();
+
+
+
     }
 
 
@@ -95,25 +142,40 @@ public class AppVote extends Application {
         out.flush();
         //recupère l'inputstream du socket
         java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
+
         //lit le message envoyé par le serveur
         Sondage sondage = (Sondage) in.readObject();
-        //set les valeurs du sondage
-        lblVote.setText(sondage.getConsigne());
-        btn1.setText(sondage.getChoix1());
-        btn2.setText(sondage.getChoix2());
 
-        //fermeture du flux d'entrée
-        in.close();
-        //fermeture du flux de sortie
-        out.close();
-        socket.close();
+        if (sondage == null) {
+            lblVote.setText("Aucun sondage en cours");
+            btn1.setText("N");
+            btn1.setDisable(true);
+            btn2.setText("A");
+            btn2.setDisable(true);
+            RefreshButton.setDisable(false);
 
+        }
+        else {
+            //set les valeurs du sondage
+            lblVote.setText(sondage.getConsigne());
+            btn1.setDisable(false);
+            btn1.setText(sondage.getChoix1());
+            btn2.setDisable(false);
+            btn2.setText(sondage.getChoix2());
+            RefreshButton.setDisable(true);
+
+            //fermeture du flux d'entrée
+            in.close();
+            //fermeture du flux de sortie
+            out.close();
+            socket.close();
+        }
     }
 
 
     public void initButtons(Stage primaryStage){
         btn1.setOnAction(e -> {
-            switchScene(btn1.getText(), primaryStage);
+            switchScene(btn1.getText());
             try {
                 sendVote(1);
                 System.out.println("vote crypté : "+choix1);
@@ -125,7 +187,7 @@ public class AppVote extends Application {
 
 
         btn2.setOnAction(e -> {
-            switchScene(btn2.getText(), primaryStage);
+            switchScene(btn2.getText());
             try {
                 sendVote(0);
                 System.out.println("vote crypté : "+choix2);
@@ -134,25 +196,89 @@ public class AppVote extends Application {
             }
         });
 
-        lblVote.setFont(new javafx.scene.text.Font(26));
-        lblVote.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
-        btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        RedButton.setOnAction(event -> {
+            primaryStage.close();
+        });
 
+        YellowButton.setOnAction(event -> {
+            primaryStage.setIconified(true);
+        });
+
+        GreenButton.setOnAction(event -> {
+            primaryStage.setMaximized(!primaryStage.isMaximized());
+            if(primaryStage.isMaximized()){
+                root.setStyle("-fx-background-color: "+ColorHex+";");
+                logo.setStyle("-fx-scale-x: 1.7; -fx-scale-y: 1.7;");
+            }else{
+                root.setStyle("-fx-background-radius: 25px;-fx-background-color: "+ColorHex+";-fx-effect: dropshadow(three-pass-box, "+ColorHex+", 18, 0.5, 0, 0);-fx-background-insets: 12;");
+                logo.setStyle("-fx-scale-x: 1; -fx-scale-y: 1;");
+            }
+
+        });
+
+        RefreshButton.setOnAction(event -> {
+            try {
+                getSondage();
+                System.out.println("refresh");
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        RefreshButton.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        RefreshButton.setGraphic(new ImageView(new Image("file:src/main/resources/reflesh32px.png")));
+        lblVote.setFont(new javafx.scene.text.Font(26));
+        lblVote.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
     }
 
     public void initPaneAndBox(){
-        vBox.getChildren().add(lblVote);
-        vBox.getChildren().add(hBox);
+HBox funBox = new HBox();
+        funBox.getChildren().addAll(lblVote,RefreshButton);
 
+        logo.setPreserveRatio(true);
+        logo.setFitHeight(100);
+        vBox.getChildren().add(logo);
+        vBox.getChildren().add(funBox);
+        vBox.getChildren().add(hBox);
         hBox.getChildren().addAll(btn1, btn2);
 
-
-        root.getChildren().add(vBox);
         vBox.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
+        funBox.setAlignment(Pos.CENTER);
+        funBox.setSpacing(20);
         hBox.setSpacing(50);
         vBox.setSpacing(70);
+        StackVote.getChildren().add(vBox);
+        StackVote.setMaxHeight(300);
+
+        StackVote.setAlignment(Pos.CENTER);
+        //StackVote.setMargin(RefreshButton, new Insets(60, 0, 0, 400));
+        root.getChildren().add(StackVote);
+
+
+
+
+    }
+
+    public void initColorButton(){
+
+            root.getChildren().remove(CircleHBouton);
+
+
+        RedButton.setGraphic(redCircle);
+        RedButton.setStyle("-fx-background-color: transparent;");
+        GreenButton.setGraphic(greenCircle);
+        GreenButton.setStyle("-fx-background-color: transparent;");
+        YellowButton.setGraphic(YellowCircle);
+        YellowButton.setStyle("-fx-background-color: transparent;");
+        CircleHBouton.getChildren().addAll(RedButton,YellowButton, GreenButton);
+        root.getChildren().add(CircleHBouton);
+        CircleHBouton.setStyle("-fx-spacing: 1px;");
+
+        root.setMargin(CircleHBouton, new Insets(32, 0, 0, 30));
+        CircleHBouton.setAlignment(Pos.TOP_LEFT);
 
     }
 
