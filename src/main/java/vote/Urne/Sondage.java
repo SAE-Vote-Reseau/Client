@@ -17,6 +17,9 @@ public class Sondage implements Serializable {
         this.choix2 = choix2;
     }
 
+
+
+
     public String getConsigne() {
         return consigne;
     }

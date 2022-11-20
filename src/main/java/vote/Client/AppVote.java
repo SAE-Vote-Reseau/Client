@@ -1,11 +1,15 @@
 package vote.Client;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,6 +22,7 @@ import vote.Urne.Sondage;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -39,6 +44,8 @@ public class AppVote extends Application {
 
     HBox hBox = new HBox();
     VBox vBox = new VBox();
+
+    HBox buttonStack = new HBox();
 
     HBox CircleHBouton = new HBox();
     Button RedButton = new Button();
@@ -64,33 +71,53 @@ public class AppVote extends Application {
     ArrayList<BigInteger> choix1 = Emalgam.chiffrer(1,clePublique);
     ArrayList<BigInteger> choix2 = Emalgam.chiffrer(0,clePublique);
 
+    private double xOffset = 0;
+    private double yOffset = 0;
 
 
     @Override
-    public void start(Stage primaryStage) throws IOException, ClassNotFoundException {
+    public void start(Stage primaryStage) throws IOException, ClassNotFoundException, InterruptedException {
         //recuperation du sondage
         getSondage();
-        initColorButton();
-        //init des boutons ainsi que leur actions
 
+        initColorButton(primaryStage);
 
-        //init de la StackPane , des Hbox et Vbox
         initPaneAndBox();
-
-
 
         initButtons(primaryStage);
 
 
-
-
         root.setStyle("-fx-background-radius: 25px;-fx-background-color: "+ColorHex+";-fx-effect: dropshadow(three-pass-box, "+ColorHex+", 18, 0.5, 0, 0);-fx-background-insets: 12;");
+
+
+        buttonStack.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(!primaryStage.isMaximized()) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            }
+        });
+
+        buttonStack.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(!primaryStage.isMaximized()) {
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            }
+        });
+
 
         Scene MainScene = new Scene(root, 1100, 700, Color.TRANSPARENT);
 
 
 
         primaryStage.initStyle(StageStyle.TRANSPARENT);
+
+
 
         primaryStage.setScene(MainScene);
         primaryStage.getIcons().add(new Image("file:src/main/resources/blahajLogo.png"));
@@ -136,7 +163,11 @@ public class AppVote extends Application {
     }
 
     public void getSondage() throws IOException, ClassNotFoundException {
+
         Socket socket = new Socket("127.0.01", 5565);
+
+
+
         java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
         out.writeUTF("getSondage");
         out.flush();
@@ -154,8 +185,7 @@ public class AppVote extends Application {
             btn2.setDisable(true);
             RefreshButton.setDisable(false);
 
-        }
-        else {
+        } else {
             //set les valeurs du sondage
             lblVote.setText(sondage.getConsigne());
             btn1.setDisable(false);
@@ -164,13 +194,21 @@ public class AppVote extends Application {
             btn2.setText(sondage.getChoix2());
             RefreshButton.setDisable(true);
 
-            //fermeture du flux d'entrée
-            in.close();
-            //fermeture du flux de sortie
-            out.close();
-            socket.close();
+
         }
-    }
+
+        //fermeture du flux d'entrée
+        in.close();
+        //fermeture du flux de sortie
+        out.close();
+
+
+
+}
+
+
+
+
 
 
     public void initButtons(Stage primaryStage){
@@ -184,6 +222,18 @@ public class AppVote extends Application {
             }
 
         });
+        btn1.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn1.setEffect(new Glow());
+            }
+        });
+        btn1.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn1.setEffect(null);
+            }
+        });
 
 
         btn2.setOnAction(e -> {
@@ -193,6 +243,19 @@ public class AppVote extends Application {
                 System.out.println("vote crypté : "+choix2);
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        });
+
+        btn2.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn2.setEffect(new Glow());
+            }
+        });
+        btn2.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn2.setEffect(null);
             }
         });
 
@@ -220,10 +283,28 @@ public class AppVote extends Application {
             try {
                 getSondage();
                 System.out.println("refresh");
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException  e) {
                 e.printStackTrace();
             }
         });
+
+        RefreshButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                RefreshButton.setEffect(new Glow());
+            }
+        });
+
+        RefreshButton.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                RefreshButton.setEffect(null);
+            }
+        });
+
+
+
+
 
         RefreshButton.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         RefreshButton.setGraphic(new ImageView(new Image("file:src/main/resources/reflesh32px.png")));
@@ -236,6 +317,9 @@ public class AppVote extends Application {
     public void initPaneAndBox(){
 HBox funBox = new HBox();
         funBox.getChildren().addAll(lblVote,RefreshButton);
+        //set insets
+        funBox.setPadding(new Insets(0, 0, 0, 70));
+
 
         logo.setPreserveRatio(true);
         logo.setFitHeight(100);
@@ -253,8 +337,9 @@ HBox funBox = new HBox();
         StackVote.getChildren().add(vBox);
         StackVote.setMaxHeight(300);
 
+
         StackVote.setAlignment(Pos.CENTER);
-        //StackVote.setMargin(RefreshButton, new Insets(60, 0, 0, 400));
+
         root.getChildren().add(StackVote);
 
 
@@ -262,10 +347,7 @@ HBox funBox = new HBox();
 
     }
 
-    public void initColorButton(){
-
-            root.getChildren().remove(CircleHBouton);
-
+    public void initColorButton(Stage stage){
 
         RedButton.setGraphic(redCircle);
         RedButton.setStyle("-fx-background-color: transparent;");
@@ -274,11 +356,23 @@ HBox funBox = new HBox();
         YellowButton.setGraphic(YellowCircle);
         YellowButton.setStyle("-fx-background-color: transparent;");
         CircleHBouton.getChildren().addAll(RedButton,YellowButton, GreenButton);
-        root.getChildren().add(CircleHBouton);
-        CircleHBouton.setStyle("-fx-spacing: 1px;");
+        buttonStack.getChildren().add(CircleHBouton);
 
-        root.setMargin(CircleHBouton, new Insets(32, 0, 0, 30));
-        CircleHBouton.setAlignment(Pos.TOP_LEFT);
+        buttonStack.prefWidthProperty().bind(stage.widthProperty());
+
+        buttonStack.setMaxHeight(10);
+
+        StackPane.setAlignment(buttonStack, Pos.TOP_RIGHT);
+        //space the buttonStack off the top of the window
+        StackPane.setMargin(buttonStack, new Insets(15, 0, 0, 0));
+
+
+        root.getChildren().add(buttonStack);
+        buttonStack.setStyle("-fx-background-color: transparent;");
+
+        CircleHBouton.setStyle("-fx-spacing: 1px;");
+        HBox.setMargin(CircleHBouton, new Insets(10, 0, 0, 30));
+        //buttonStack.setAlignment(Pos.TOP_LEFT);
 
     }
 
