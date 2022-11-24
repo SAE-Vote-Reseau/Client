@@ -18,8 +18,6 @@ public class Sondage implements Serializable {
     }
 
 
-
-
     public String getConsigne() {
         return consigne;
     }
