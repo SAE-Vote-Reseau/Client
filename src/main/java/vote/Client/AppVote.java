@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,19 +12,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.StageStyle;
+import vote.Urne.RequeteGetSondage;
 import vote.Urne.Sondage;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 
@@ -163,13 +160,16 @@ public class AppVote extends Application {
     }
 
     public void getSondage() throws IOException, ClassNotFoundException {
-
+    try{
         Socket socket = new Socket("127.0.01", 5565);
 
 
 
+        RequeteGetSondage req = new RequeteGetSondage();
+
+
         java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
-        out.writeUTF("getSondage");
+        out.writeObject(req);
         out.flush();
         //recupère l'inputstream du socket
         java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
@@ -204,7 +204,18 @@ public class AppVote extends Application {
 
 
 
-}
+    }catch (IOException e){
+        new ConnectException("Impossible de se connecter au serveur");
+        lblVote.setText("La connexion au serveur n'est pas disponible");
+        btn1.setText("N");
+        btn1.setDisable(true);
+        btn2.setText("A");
+        btn2.setDisable(true);
+        RefreshButton.setDisable(false);
+    }
+    }
+
+
 
 
 
@@ -376,8 +387,13 @@ HBox funBox = new HBox();
 
     }
 
-
+    private static class ConnectException extends Exception {
+        public ConnectException(String exception) {
+            super(exception);
+        }
+    }
 }
+
 
 
 
