@@ -18,10 +18,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import vote.Crypto.ElGamal;
 import vote.Urne.RequeteGetSondage;
 import vote.Urne.RequeteVote;
 import vote.Urne.Sondage;
 
+import javax.crypto.KeyGenerator;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
@@ -144,12 +146,15 @@ public class AppVote extends Application {
         //envoie un vote au serveur
         try {
             //création d'un socket client
+            BigInteger[] vote = ElGamal.keyGen(10);
+            BigInteger[] chiffre1 = ElGamal.encrypt(BigInteger.valueOf(choice),vote[4],vote[0],vote[1],vote[2]);
             Socket socket = new Socket("127.0.0.1", 5565);
 
             ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
-            RequeteVote req = new RequeteVote(String.valueOf(choice));
+            RequeteVote req = new RequeteVote(chiffre1);
             out.writeObject(req);
             out.flush();
+            System.out.println("vote envoyé");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -159,7 +164,6 @@ public class AppVote extends Application {
     public void getSondage() throws IOException, ClassNotFoundException {
     try{
         Socket socket = new Socket("127.0.01", 5565);
-
 
 
         RequeteGetSondage req = new RequeteGetSondage();
