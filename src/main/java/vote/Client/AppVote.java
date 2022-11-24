@@ -156,6 +156,7 @@ public class AppVote extends Application {
             out.flush();
             System.out.println("vote envoyé");
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
