@@ -19,9 +19,11 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import vote.Urne.RequeteGetSondage;
+import vote.Urne.RequeteVote;
 import vote.Urne.Sondage;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -63,8 +65,7 @@ public class AppVote extends Application {
     Image img = new Image("file:src/main/resources/blahaj.png");
     ImageView logo = new ImageView(img);
 
-    //chiffrage
-    Random rdn = new Random();
+
     ArrayList<BigInteger> cle = Emalgam.keyGeneration();
     ArrayList<BigInteger> clePublique = Emalgam.getPublique(cle);
     ArrayList<BigInteger> choix1 = Emalgam.chiffrer(1,clePublique);
@@ -144,15 +145,11 @@ public class AppVote extends Application {
         try {
             //création d'un socket client
             Socket socket = new Socket("127.0.0.1", 5565);
-            //création d'un flux de sortie
-            java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
-            //écriture dans le flux de sortie
-            out.writeUTF(String.valueOf(choice));
+
+            ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
+            RequeteVote req = new RequeteVote(String.valueOf(choice));
+            out.writeObject(req);
             out.flush();
-            //Fermeture du flux de sortie
-            out.close();
-            //Fermeture du socket
-            socket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -205,7 +202,7 @@ public class AppVote extends Application {
 
 
     }catch (IOException e){
-        new ConnectException("Impossible de se connecter au serveur");
+
         lblVote.setText("La connexion au serveur n'est pas disponible");
         btn1.setText("N");
         btn1.setDisable(true);
