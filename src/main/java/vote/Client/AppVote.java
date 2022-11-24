@@ -18,18 +18,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import vote.Crypto.ElGamal;
+import vote.crypto.ElGamal;
+import vote.crypto.Message;
 import vote.Urne.RequeteGetSondage;
 import vote.Urne.RequeteVote;
 import vote.Urne.Sondage;
 
-import javax.crypto.KeyGenerator;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Random;
 
 
 public class AppVote extends Application {
@@ -67,11 +65,7 @@ public class AppVote extends Application {
     Image img = new Image("file:src/main/resources/blahaj.png");
     ImageView logo = new ImageView(img);
 
-
-    ArrayList<BigInteger> cle = Emalgam.keyGeneration();
-    ArrayList<BigInteger> clePublique = Emalgam.getPublique(cle);
-    ArrayList<BigInteger> choix1 = Emalgam.chiffrer(1,clePublique);
-    ArrayList<BigInteger> choix2 = Emalgam.chiffrer(0,clePublique);
+    Sondage sondage;
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -146,12 +140,11 @@ public class AppVote extends Application {
         //envoie un vote au serveur
         try {
             //création d'un socket client
-            BigInteger[] vote = ElGamal.keyGen(10);
-            BigInteger[] chiffre1 = ElGamal.encrypt(BigInteger.valueOf(choice),vote[4],vote[0],vote[1],vote[2]);
+            Message voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
             Socket socket = new Socket("127.0.0.1", 5565);
 
             ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
-            RequeteVote req = new RequeteVote(chiffre1);
+            RequeteVote req = new RequeteVote(voteChiffre);
             out.writeObject(req);
             out.flush();
             System.out.println("vote envoyé");
@@ -177,7 +170,7 @@ public class AppVote extends Application {
         java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
 
         //lit le message envoyé par le serveur
-        Sondage sondage = (Sondage) in.readObject();
+        sondage = (Sondage) in.readObject();
 
         if (sondage == null) {
             lblVote.setText("Aucun sondage en cours");
@@ -187,7 +180,11 @@ public class AppVote extends Application {
             btn2.setDisable(true);
             RefreshButton.setDisable(false);
 
-        } else {
+        }
+        else if (sondage.getResultat() != null){
+            System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " + (1 - sondage.getResultat())/sondage.getNbVotant() * 100 + "\n" + sondage.getChoix2() + ": " + sondage.getResultat()/sondage.getNbVotant() * 100 );
+        }
+        else {
             //set les valeurs du sondage
             lblVote.setText(sondage.getConsigne());
             btn1.setDisable(false);
@@ -229,7 +226,6 @@ public class AppVote extends Application {
             switchScene(btn1.getText());
             try {
                 sendVote(1);
-                System.out.println("vote crypté : "+choix1);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -253,7 +249,6 @@ public class AppVote extends Application {
             switchScene(btn2.getText());
             try {
                 sendVote(0);
-                System.out.println("vote crypté : "+choix2);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
