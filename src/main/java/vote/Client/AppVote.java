@@ -584,6 +584,7 @@ public class AppVote extends Application {
             Button btn4Panel = new Button("Quitter");
             btn4Panel.setOnAction(e -> {
                 root.getChildren().remove(stackPanePanel);
+                stackPanePanel.getChildren().clear();
                 PanelOpen = false;
             });
             Button btnGetResult = new Button("Resultats");
