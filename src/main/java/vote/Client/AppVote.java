@@ -1002,7 +1002,7 @@ HBox funBox = new HBox();
             if(password.getText().equals(passwordConfirm.getText())){
                 try {
                     Socket socket = new Socket("127.0.0.1", 5565);
-                    RequeteAddUser req = new RequeteAddUser(nom.getText(),prenom.getText(),email.getText(),password.getText(),admin.isSelected(),connexionReponse.getSsid());
+                    RequeteAddUser req = new RequeteAddUser(email.getText(),prenom.getText(),nom.getText(),password.getText(),admin.isSelected(),connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(req);
                     oos.flush();
