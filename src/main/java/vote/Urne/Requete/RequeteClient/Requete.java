@@ -1,4 +1,4 @@
-package vote.Urne;
+package vote.Urne.Requete.RequeteClient;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
