@@ -47,6 +47,8 @@ import vote.Urne.metier.Sondage;
 import vote.crypto.ElGamal;
 import vote.crypto.Message;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -127,12 +129,16 @@ public class AppVote extends Application {
 
     private double yOffsetPanel;
 
+    private String ip = "127.0.0.1"; // par defaut
+    private int port = 5565;
+
 
     @Override
     public void start(Stage primaryStage) throws IOException, ClassNotFoundException, InterruptedException {
         setKonami();
 
-
+        System.setProperty("javax.net.ssl.trustStore", "./client.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "auuugh");
 
         ConnexionScene(primaryStage);
 
@@ -231,7 +237,9 @@ public class AppVote extends Application {
                 requeteConnexion = new RequeteConnexion(Username.getText(),Password.getText());
                 try {
                     Label labelTime = new Label();
-                    Socket socket = new Socket("127.0.0.1", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                     objectOutputStream.writeObject(requeteConnexion);
                     ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -283,7 +291,7 @@ public class AppVote extends Application {
                         fadeTransition.play();
                     }
                     objectOutputStream.close();
-                    socket.close();
+                    //socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
@@ -352,7 +360,9 @@ public class AppVote extends Application {
         try {
             //création d'un socket client
             Message voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
-            Socket socket = new Socket("127.0.0.1", 5565);
+
+            SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
 
             ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
            RequeteVote req = new RequeteVote(voteChiffre,connexionReponse.getSsid());
@@ -373,7 +383,8 @@ public class AppVote extends Application {
             public void run() {
                 System.out.println("get sondage");
                 try{
-                    Socket socket = new Socket("127.0.01", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
 
 
                     RequeteGetSondage req = new RequeteGetSondage(connexionReponse.getSsid());
@@ -590,7 +601,9 @@ public class AppVote extends Application {
             Button btnGetResult = new Button("Resultats");
             btnGetResult.setOnAction(e -> {
                 try{
-                    Socket socket = new Socket("127.0.0.1", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                     RequeteFermerRecolte req = new RequeteFermerRecolte(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(req);
@@ -611,7 +624,9 @@ public class AppVote extends Application {
             Button btnFermerSondage = new Button("Fermer Sondage");
             btnFermerSondage.setOnAction(e -> {
                 try{
-                    Socket socket = new Socket("127.0.0.1", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                     RequeteArreterSondage req = new RequeteArreterSondage(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     System.out.println("arrêt du sondage");
@@ -723,7 +738,9 @@ public void creerSondage(){
             alert.showAndWait();
         }else{
             try{
-                Socket socket = new Socket("127.0.0.1", 5565);
+                SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                 RequeteCreerSondage req = new RequeteCreerSondage(consigne, choix1, choix2,nbBits,connexionReponse.getSsid());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 oos.writeObject(req);
@@ -858,7 +875,9 @@ HBox funBox = new HBox();
 
     public void rafraichirUtilisateurs(ListView<String> view){
         try {
-            Socket socket = new Socket("127.0.0.1", 5565);
+            SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
             RequeteGetAllUsers req = new RequeteGetAllUsers(connexionReponse.getSsid());
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(req);
@@ -874,7 +893,7 @@ HBox funBox = new HBox();
             view.setItems(FXCollections.observableArrayList(employesString));
 
 
-            socket.close();
+            //socket.close();
             oos.close();
             ois.close();
             } catch (IOException | ClassNotFoundException e) {
@@ -895,13 +914,15 @@ HBox funBox = new HBox();
     public void supprimerUtilisateur(ListView<String> view) {
         try {
             listViewEmploye.getSelectionModel().select(view.getSelectionModel().getSelectedIndex());
-            Socket socket = new Socket("127.0.0.1", 5565);
+            SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
             RequeteDeleteUser req = new RequeteDeleteUser(listViewEmploye.getSelectionModel().getSelectedItem().getEmail(),connexionReponse.getSsid());
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(req);
             oos.flush();
             oos.close();
-            socket.close();
+           // socket.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -944,13 +965,15 @@ HBox funBox = new HBox();
             if(password.getText().equals(passwordConfirm.getText())){
                 try {
 
-                    Socket socket = new Socket("127.0.0.1", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                     RequeteUpdateUser req = new RequeteUpdateUser(email,prenom.getText(),nom.getText(),password.getText(),admin.isSelected(),connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(req);
                     oos.flush();
                     oos.close();
-                    socket.close();
+                    //socket.close();
                     root.getChildren().remove(paneUser);
                     rafraichirUtilisateurs(view);
                 } catch (IOException ex) {
@@ -1002,13 +1025,15 @@ HBox funBox = new HBox();
         save.setOnAction(e -> {
             if(password.getText().equals(passwordConfirm.getText())){
                 try {
-                    Socket socket = new Socket("127.0.0.1", 5565);
+                    SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
                     RequeteAddUser req = new RequeteAddUser(email.getText(),prenom.getText(),nom.getText(),password.getText(),admin.isSelected(),connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(req);
                     oos.flush();
                     oos.close();
-                    socket.close();
+                    //socket.close();
                     root.getChildren().remove(paneUser);
                     rafraichirUtilisateurs(view);
     } catch (UnknownHostException ex) {
