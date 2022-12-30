@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,10 +39,7 @@ import vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteEtat.RequeteFermerRec
 import vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteEtat.RequetePublierResultat;
 import vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteGetAllUsers;
 import vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteUpdateUser;
-import vote.Urne.Requete.RequeteClient.RequeteUtilisateur.ConnexionReponse;
-import vote.Urne.Requete.RequeteClient.RequeteUtilisateur.RequeteConnexion;
-import vote.Urne.Requete.RequeteClient.RequeteUtilisateur.RequeteGetSondage;
-import vote.Urne.Requete.RequeteClient.RequeteUtilisateur.RequeteVote;
+import vote.Urne.Requete.RequeteClient.RequeteUtilisateur.*;
 import vote.Urne.metier.Employe;
 import vote.Urne.metier.Sondage;
 import vote.crypto.ElGamal;
@@ -198,11 +196,110 @@ public class AppVote extends Application {
         PasswordField Password = new PasswordField();
         Button Connexion = new Button("Connexion");
 
+        TextField IP = new TextField();
+        TextField Port = new TextField();
+
+        VBox vBoxMDPOUBLIE = new VBox();
+        Button PasswordForgot = new Button("Mot de passe oublie");
+        PasswordForgot.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
+        PasswordForgot.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(vBoxMDPOUBLIE.getChildren().size()==0){
+                    Label label = new Label("Entrez votre adresse mail");
+                    label.setStyle("-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;");
+                    TextField questionMail = new TextField();
+                    questionMail.setMaxWidth(200);
+                    Button button = new Button("Envoyer");
+                    Button Quitter = new Button("Quitter");
+
+                    TextField code = new TextField();
+                    code.setMaxWidth(200);
+                    TextField nouveauMdp = new TextField();
+                    nouveauMdp.setMaxWidth(200);
+                    Button buttonCode = new Button("Envoyer");
+                    buttonCode.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
+                    Label labelCode = new Label("Entrez code recu par mail");
+                    labelCode.setStyle("-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;");
+                    Label labelMdp = new Label("Entrez mot de passe");
+                    labelMdp.setStyle("-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;");
+
+
+                    vBoxMDPOUBLIE.getChildren().addAll(label,questionMail, button, Quitter);
+                    vBoxMDPOUBLIE.setAlignment(Pos.CENTER);
+                    vBoxMDPOUBLIE.setSpacing(10);
+                    vBoxMDPOUBLIE.setMaxWidth(200);
+                    vBoxMDPOUBLIE.setMaxHeight(200);
+
+                    vBoxMDPOUBLIE.setStyle("-fx-background-color: " + ColorStyle + ";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+
+
+                    button.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
+                    button.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            try {
+                                SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                                SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(ip, port);
+
+                                RequeteMotDePasseOublie requeteMotDePasseOublie = new RequeteMotDePasseOublie(questionMail.getText());
+                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(sslsocket.getOutputStream());
+                                objectOutputStream.writeObject(requeteMotDePasseOublie);
+                                objectOutputStream.flush();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            vBoxMDPOUBLIE.getChildren().clear();
+
+                            vBoxMDPOUBLIE.getChildren().addAll(labelCode,code,labelMdp,nouveauMdp, buttonCode,Quitter);
+
+                        }
+                    });
+
+                    buttonCode.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            try {
+                                SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                                SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(ip, port);
+
+                                RequeteChangerMotDePasseOublie requeteChangerMotDePasseOublie = new RequeteChangerMotDePasseOublie(code.getText(),nouveauMdp.getText());
+                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(sslsocket.getOutputStream());
+                                objectOutputStream.writeObject(requeteChangerMotDePasseOublie);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            vBoxMDPOUBLIE.getChildren().clear();
+                            StackConnexion.getChildren().remove(vBoxMDPOUBLIE);
+                        }
+                    });
+
+                    buttonCode.disableProperty().bind(Bindings.isEmpty(code.textProperty()).or(Bindings.isEmpty(nouveauMdp.textProperty())));
+
+                    Quitter.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
+                    Quitter.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            StackConnexion.getChildren().remove(vBoxMDPOUBLIE);
+                            vBoxMDPOUBLIE.getChildren().removeAll(label,labelCode,questionMail, button,buttonCode, Quitter);
+                        }
+                    });
+                    StackConnexion.getChildren().add(vBoxMDPOUBLIE);
+                }
+
+        }});
+
+
+
+
+
 
         HBox hBox = new HBox();
 
         VBox vBox2 = new VBox();
-        vBox2.getChildren().addAll(Username,Password);
+        vBox2.getChildren().addAll(Username,Password,IP,Port);
         vBox2.setMaxWidth(160);
 
         vBox2.setSpacing(10);
@@ -217,7 +314,11 @@ public class AppVote extends Application {
 
         StackConnexion.getChildren().add(vBoxLOGIN);
 
-        root.getChildren().add(vBoxLOGIN);
+        StackConnexion.getChildren().add(PasswordForgot);
+        StackConnexion.setAlignment(PasswordForgot, Pos.BOTTOM_RIGHT);
+        PasswordForgot.setTranslateX(-30);
+        PasswordForgot.setTranslateY(-30);
+        root.getChildren().add(StackConnexion);
 
         vBoxLOGIN.setAlignment(Pos.CENTER);
 
@@ -228,12 +329,18 @@ public class AppVote extends Application {
 
         Username.setStyle("-fx-background-color: #191919;-fx-text-fill: #5F5AA2;-fx-border-color: #5F5AA2;-fx-border-width: 2px;");
         Password.setStyle("-fx-background-color: #191919;-fx-text-fill: #5F5AA2;-fx-border-color: #5F5AA2;-fx-border-width: 2px;");
+        IP.setStyle("-fx-background-color: #191919;-fx-text-fill: #5F5AA2;-fx-border-color: #5F5AA2;-fx-border-width: 2px;");
+        IP.setPromptText("IP");
+        Port.setStyle("-fx-background-color: #191919;-fx-text-fill: #5F5AA2;-fx-border-color: #5F5AA2;-fx-border-width: 2px;");
+        Port.setPromptText("Port");
 
         Connexion.setStyle("-fx-background-color: #5F5AA2; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 25px; -fx-padding: 10px 20px 10px 20px;");
 
         Connexion.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                ip = IP.getText();
+                port = Integer.parseInt(Port.getText());
                 requeteConnexion = new RequeteConnexion(Username.getText(),Password.getText());
                 try {
                     Label labelTime = new Label();
@@ -247,7 +354,7 @@ public class AppVote extends Application {
                     Object objet = objectInputStream.readObject();
                     if (objet != null) {
                         connexionReponse = (ConnexionReponse) objet;
-                        root.getChildren().remove(vBoxLOGIN);
+                        root.getChildren().remove(StackConnexion);
                         if(LocalTime.now().isAfter(LocalTime.of(0,0,0)) && LocalTime.now().isBefore(LocalTime.of(6,0,0))) {
                              labelTime = new Label("Bonsoir " + connexionReponse.getEmploye().getPrenom() + " !");
                         }else {
@@ -299,10 +406,7 @@ public class AppVote extends Application {
                 }
             }
         });
-
-
-
-
+        Connexion.disableProperty().bind(Bindings.isEmpty(Username.textProperty()).or(Bindings.isEmpty(Password.textProperty()).or(Bindings.isEmpty(IP.textProperty()).or(Bindings.isEmpty(Port.textProperty())))));
     }
 
 
@@ -579,17 +683,21 @@ public class AppVote extends Application {
             Button btn1Panel = new Button("Ajouter");
             btn1Panel.setOnAction(e -> {
                 createUserscene(listView);
+                stackPanePanel.setTranslateX(290);
 
             });
             Button btn2Panel = new Button("Supprimer");
             btn2Panel.setOnAction(e -> {
                 supprimerUtilisateur(listView);
                 rafraichirUtilisateurs(listView);
+                //move the panel to the right
+                stackPanePanel.setTranslateX(290);
             });
             Button btn3Panel = new Button("Modifier");
             btn3Panel.setOnAction(e -> {
                 modifierUtilisateur(listView);
                 rafraichirUtilisateurs(listView);
+                stackPanePanel.setTranslateX(290);
             });
             Button btnCreateSondage = new Button("Créer sondage");
             Button btn4Panel = new Button("Quitter");
@@ -602,13 +710,13 @@ public class AppVote extends Application {
             btnGetResult.setOnAction(e -> {
                 try{
                     SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-                    Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+                    Socket socket = socketFactory.createSocket(ip, port);
 
                     RequeteFermerRecolte req = new RequeteFermerRecolte(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     oos.writeObject(req);
                     oos.flush();
-                    Socket socket2 = new Socket("127.0.0.1", 5565);
+                    Socket socket2 = socketFactory.createSocket(ip, port);
                     ObjectOutputStream oos2 = new ObjectOutputStream(socket2.getOutputStream());
                     RequetePublierResultat req2 = new RequetePublierResultat(connexionReponse.getSsid());
                     oos2.writeObject(req2);
@@ -778,7 +886,7 @@ public void creerSondage(){
 }
 
     public void initPaneAndBox(boolean isAdmin,Stage primaryStage){
-HBox funBox = new HBox();
+        HBox funBox = new HBox();
         funBox.getChildren().add(lblVote);
         logo.setPreserveRatio(true);
         logo.setFitHeight(100);
@@ -913,17 +1021,27 @@ HBox funBox = new HBox();
 
     public void supprimerUtilisateur(ListView<String> view) {
         try {
-            listViewEmploye.getSelectionModel().select(view.getSelectionModel().getSelectedIndex());
-            SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+            //si l'utilisateur sélectionner est le même que celui qui est connecté
+            if (view.getSelectionModel().getSelectedItem().equals(connexionReponse.getEmploye().getNom() + " " + connexionReponse.getEmploye().getPrenom())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Vous ne pouvez pas supprimer votre propre compte");
+                alert.setContentText("Veuillez vous déconnecter et supprimer votre compte depuis un autre compte");
+                alert.showAndWait();
+            } else {
 
-            RequeteDeleteUser req = new RequeteDeleteUser(listViewEmploye.getSelectionModel().getSelectedItem().getEmail(),connexionReponse.getSsid());
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            oos.writeObject(req);
-            oos.flush();
-            oos.close();
-           // socket.close();
 
+                listViewEmploye.getSelectionModel().select(view.getSelectionModel().getSelectedIndex());
+                SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
+                RequeteDeleteUser req = new RequeteDeleteUser(listViewEmploye.getSelectionModel().getSelectedItem().getEmail(), connexionReponse.getSsid());
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(req);
+                oos.flush();
+                oos.close();
+                // socket.close();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
