@@ -70,14 +70,19 @@ public class AppVote extends Application {
 
     public static StackPane StackConnexion = new StackPane();
 
+    StackPane stackPanePanelHisto = new StackPane();
+
     SplitPane splitPane = new SplitPane();
     Button btn1 = new Button();
     Button btn2 = new Button();
 
     Button btn3 = new Button();
+    Button btn4 = new Button("Historique");
     Label lblVote = new Label();
 
     boolean PanelOpen = false;
+
+    boolean PaneHistoryOpen = false;
 
 
     public volatile Group groupPie;
@@ -195,6 +200,7 @@ public class AppVote extends Application {
         TextField Username = new TextField();
         PasswordField Password = new PasswordField();
         Button Connexion = new Button("Connexion");
+
 
         TextField IP = new TextField();
         TextField Port = new TextField();
@@ -414,12 +420,9 @@ public class AppVote extends Application {
 
 
     public synchronized void ResultScene(){
-        if(root.getChildren().contains(StackVote)){
-            root.getChildren().remove(StackVote);
-        }
-        if(root.getChildren().contains(label)){
-            root.getChildren().remove(label);
-        }
+        root.getChildren().remove(StackVote);
+        root.getChildren().remove(label);
+        root.getChildren().remove(stackPanePanelHisto);
         groupPie = new Group();
 
 
@@ -436,7 +439,6 @@ public class AppVote extends Application {
 
 
             chart = new PieChart(pieChartData);
-
 
 
             root.getChildren().add(chart);
@@ -626,6 +628,18 @@ public class AppVote extends Application {
             }
         });
 
+        btn4.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn4.setEffect(new Glow());
+            }
+        });
+        btn4.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btn4.setEffect(null);
+            }
+        });
 
 
 
@@ -636,6 +650,7 @@ public class AppVote extends Application {
         btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn3.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btn4.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
     }
 
     public void  AdminPanelScene(Stage primaryStage){
@@ -887,6 +902,7 @@ public void creerSondage(){
 
     public void initPaneAndBox(boolean isAdmin,Stage primaryStage){
         HBox funBox = new HBox();
+
         funBox.getChildren().add(lblVote);
         logo.setPreserveRatio(true);
         logo.setFitHeight(100);
@@ -901,9 +917,24 @@ public void creerSondage(){
                 AdminPanelScene(primaryStage);
             });
         }
+        root.getChildren().add(btn4);
+        StackPane.setAlignment(btn4, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(btn3, Pos.BOTTOM_RIGHT);
+        btn4.setText("Historique");
         StackPane.setMargin(btn3, new Insets(0, 40, 40, 0));
+        StackPane.setMargin(btn4, new Insets(0, 0, 40, 40));
 
+        btn4.setOnAction(e -> {
+            PaneHistoryOpen = !PaneHistoryOpen;
+            if (PaneHistoryOpen) {
+                HistoriqueScene(primaryStage);
+                StackVote.setVisible(false);
+            } else {
+                StackVote.setVisible(true);
+
+                root.getChildren().remove(stackPanePanelHisto);
+            }
+        });
 
         vBox.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
@@ -923,6 +954,62 @@ public void creerSondage(){
 
 
 
+
+    }
+
+    private void HistoriqueScene(Stage primaryStage) {
+
+            StackVote.setVisible(false);
+            stackPanePanelHisto.setStyle("-fx-background-color: transparent;");
+            stackPanePanelHisto.setMaxWidth(500);
+            stackPanePanelHisto.setMaxHeight(500);
+            StackPane.setAlignment(stackPanePanelHisto, Pos.CENTER);
+            root.getChildren().add(stackPanePanelHisto);
+            try {
+                SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+                RequeteHistory req = new RequeteHistory();
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(req);
+                oos.flush();
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                ArrayList<Sondage> sondages = (ArrayList<Sondage>) ois.readObject();
+                VBox vBox = new VBox();
+                vBox.setSpacing(10);
+                vBox.setAlignment(Pos.CENTER);
+                vBox.setStyle("-fx-background-color: " + ColorStyle + "; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                ScrollPane scrollPane = new ScrollPane();
+
+                for (Sondage sondage : sondages) {
+                    HBox hBox = new HBox();
+                    hBox.setSpacing(10);
+                    hBox.setAlignment(Pos.CENTER);
+                    System.out.println(sondage.getNbVotant());
+                    System.out.println(sondage.getResultat());
+                    System.out.println(" ");
+                    Label label = new Label(sondage.getConsigne() + " : " + sondage.getChoix1() + " (" + (sondage.getNbVotant()-sondage.getResultat()) + "), " + sondage.getChoix2() + " (" + sondage.getResultat() + ")");
+                    label.setStyle("-fx-font-size: 20px;");
+                    hBox.getChildren().add(label);
+                    vBox.getChildren().add(hBox);
+                }
+                ScrollBar scrollBar = new ScrollBar();
+
+                scrollPane.setContent(vBox);
+                stackPanePanelHisto.getChildren().add(scrollPane);
+
+
+                vBox.maxWidth(250);
+                StackPane.setAlignment(scrollPane, Pos.CENTER);
+
+                scrollPane.setStyle("-fx-background-color: transparent;-fx-background: transparent;");
+                scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+                scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setPannable(true);
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
     }
 
