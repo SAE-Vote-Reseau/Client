@@ -115,7 +115,9 @@ public class AppVote extends Application {
     ImageView logo = new ImageView(img);
     public volatile Label label;
 
-    Sondage sondage;
+    public volatile Label labelDejaVote= new Label("");;
+
+   volatile Sondage sondage;
 
     RequeteConnexion requeteConnexion;
 
@@ -134,6 +136,8 @@ public class AppVote extends Application {
 
     private String ip = "127.0.0.1"; // par defaut
     private int port = 5565;
+
+    boolean isSondageNull = false;
 
 
     @Override
@@ -188,11 +192,11 @@ public class AppVote extends Application {
         launch();
     }
 
-    public void mainScene(boolean isAdmin, Stage primaryStage) throws IOException, ClassNotFoundException {
+    public void mainScene(boolean isAdmin, Stage primaryStage, String ssid) throws IOException, ClassNotFoundException {
         root.getChildren().remove(vBoxLOGIN);
         getSondage();
         initButtons();
-        initPaneAndBox(isAdmin, primaryStage);
+        initPaneAndBox(isAdmin, primaryStage,ssid);
 
     }
 
@@ -387,7 +391,7 @@ public class AppVote extends Application {
                                             public void handle(ActionEvent event) {
                                                 root.getChildren().remove(finalLabelTime);
                                                 try {
-                                                    mainScene(connexionReponse.getEmploye().isEstAdmin(), primaryStage);
+                                                    mainScene(connexionReponse.getEmploye().isEstAdmin(), primaryStage, connexionReponse.getSsid());
                                                 } catch (IOException | ClassNotFoundException e) {
                                                     throw new RuntimeException(e);
                                                 }
@@ -510,9 +514,9 @@ public class AppVote extends Application {
                             btn1.setText("N");
                             btn1.setDisable(true);
                             btn2.setText("A");
-                            btn2.setDisable(true);});
-
-
+                            btn2.setDisable(true);
+                            labelDejaVote.setText("");
+                        });
 
                     }
                     else if (sondage.getResultat() != null){
@@ -530,10 +534,20 @@ public class AppVote extends Application {
                            btn1.setText(sondage.getChoix1());
                            btn2.setDisable(false);
                            btn2.setText(sondage.getChoix2());
+                           if(aDejaVote(connexionReponse.getSsid())){
+                               btn1.setDisable(true);
+                               btn2.setDisable(true);
+                               labelDejaVote.setText("Vous avez deja emis un vote !");
+
+                                 labelDejaVote.setStyle("-fx-font-size: 32;-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #fff;");
+                           }
+                            else{
+                                 labelDejaVote.setText("");
+                                 labelDejaVote.setVisible(false);
+                            }
                        });
 
                     }
-
                     //fermeture du flux d'entrée
                     in.close();
                     //fermeture du flux de sortie
@@ -653,7 +667,7 @@ public class AppVote extends Application {
         btn4.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
     }
 
-    public void  AdminPanelScene(Stage primaryStage){
+    public void AdminPanelScene(Stage primaryStage){
         if(!PanelOpen) {
 
             splitPane = new SplitPane();
@@ -757,6 +771,7 @@ public class AppVote extends Application {
                     oos.flush();
 
                     root.getChildren().remove(chart);
+                    root.getChildren().remove(StackVote);
                     root.getChildren().add(StackVote);
                     getSondage();
             } catch (IOException | ClassNotFoundException ex) {
@@ -779,6 +794,7 @@ public class AppVote extends Application {
                 hboxBottm.getChildren().add(btnCreateSondage);
                 btnCreateSondage.setOnAction(e -> {
                     creerSondage();
+                    stackPanePanel.setTranslateX(290);
                 });
                 //center the button
                 btnCreateSondage.setAlignment(Pos.CENTER);
@@ -900,16 +916,23 @@ public void creerSondage(){
     root.getChildren().add(paneUser);
 }
 
-    public void initPaneAndBox(boolean isAdmin,Stage primaryStage){
+    public void initPaneAndBox(boolean isAdmin,Stage primaryStage, String ssid){
         HBox funBox = new HBox();
+
 
         funBox.getChildren().add(lblVote);
         logo.setPreserveRatio(true);
         logo.setFitHeight(100);
         vBox.getChildren().add(logo);
+        vBox.getChildren().add(labelDejaVote);
         vBox.getChildren().add(funBox);
         vBox.getChildren().add(hBox);
         hBox.getChildren().addAll(btn1, btn2);
+
+
+
+
+
         if(isAdmin) {
             root.getChildren().add(btn3);
             btn3.setText("Admin Panel");
@@ -952,9 +975,23 @@ public void creerSondage(){
 
         root.getChildren().add(StackVote);
 
+    }
 
+    private boolean aDejaVote(String ssid){
+        try{
+            SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
 
+            RequeteGetADejaVote req = new RequeteGetADejaVote(ssid);
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            oos.writeObject(req);
+            oos.flush();
 
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            return (boolean) ois.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void HistoriqueScene(Stage primaryStage) {
