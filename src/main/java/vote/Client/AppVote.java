@@ -146,8 +146,8 @@ public class AppVote extends Application {
     public void start(Stage primaryStage) throws IOException, ClassNotFoundException, InterruptedException {
         setKonami();
 
-        System.setProperty("javax.net.ssl.trustStore", "./client.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "auuugh");
+        System.setProperty("javax.net.ssl.trustStore", SSLConf.getInstance().getPath());
+        System.setProperty("javax.net.ssl.trustStorePassword", SSLConf.getInstance().getPassword());
 
         ConnexionScene(primaryStage);
 
@@ -859,20 +859,12 @@ public void creerSondage(){
     textField3.setMaxHeight(50);
     textField3.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-    TextField textField4 = new TextField();
-    textField4.setPromptText("nombre Bits");
-    textField4.setMaxWidth(200);
-    textField4.setMaxHeight(50);
-    textField4.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
     Button btn = new Button("Creer");
     btn.setOnAction(e->{
         String consigne = textField.getText();
         String choix1 = textField2.getText();
         String choix2 = textField3.getText();
-        int nbBits = Integer.parseInt(textField4.getText());
-        System.out.println(nbBits);
-        if(consigne.equals("") || choix1.equals("") || choix2.equals("") || nbBits == 0){
+        if(consigne.equals("") || choix1.equals("") || choix2.equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur");
             alert.setHeaderText("Erreur");
@@ -883,7 +875,7 @@ public void creerSondage(){
                 SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
                 Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
 
-                RequeteCreerSondage req = new RequeteCreerSondage(consigne, choix1, choix2,nbBits,connexionReponse.getSsid());
+                RequeteCreerSondage req = new RequeteCreerSondage(consigne, choix1, choix2,connexionReponse.getSsid());
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 oos.writeObject(req);
                 oos.flush();
@@ -911,7 +903,7 @@ public void creerSondage(){
     vbox.setSpacing(10);
     hbox.setSpacing(10);
     hbox.getChildren().addAll(btn, btn2);
-    vbox.getChildren().addAll(textField, textField2, textField3,textField4, hbox);
+    vbox.getChildren().addAll(textField, textField2, textField3, hbox);
     vbox.setAlignment(Pos.CENTER);
     hbox.setAlignment(Pos.CENTER);
     paneUser.getChildren().add(vbox);

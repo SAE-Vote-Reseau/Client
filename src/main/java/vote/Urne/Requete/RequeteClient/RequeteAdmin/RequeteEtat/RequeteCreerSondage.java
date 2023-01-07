@@ -1,6 +1,5 @@
 package vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteEtat;
 
-
 import vote.Urne.Requete.RequeteClient.Requete;
 
 import java.io.IOException;
@@ -12,19 +11,13 @@ public class RequeteCreerSondage extends Requete {
     private String choix1;
     private String choix2;
 
-    private int nbBits;
-
     private String sessionId;
 
-    public RequeteCreerSondage(String consigne, String choix1, String choix2, int nbBits, String sessionId){
+    public RequeteCreerSondage(String consigne, String choix1, String choix2, String sessionId){
         super("creer");
         this.consigne = consigne;
         this.choix1 = choix1;
         this.choix2 = choix2;
         this.sessionId = sessionId;
-
-        this.nbBits = nbBits;
     }
-
-
 }
