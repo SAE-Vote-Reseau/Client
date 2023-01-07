@@ -97,6 +97,8 @@ public class AppVote extends Application {
     HBox buttonStack = new HBox();
 
     HBox CircleHBouton = new HBox();
+
+    HBox funBox = new HBox();
     Button RedButton = new Button();
     Button GreenButton = new Button();
     Button YellowButton = new Button();
@@ -515,7 +517,8 @@ public class AppVote extends Application {
                             btn1.setDisable(true);
                             btn2.setText("A");
                             btn2.setDisable(true);
-                            labelDejaVote.setText("");
+                            funBox.getChildren().remove(lblVote);
+
                         });
 
                     }
@@ -917,7 +920,7 @@ public void creerSondage(){
 }
 
     public void initPaneAndBox(boolean isAdmin,Stage primaryStage, String ssid){
-        HBox funBox = new HBox();
+
 
 
         funBox.getChildren().add(lblVote);
