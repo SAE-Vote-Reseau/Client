@@ -517,7 +517,7 @@ public class AppVote extends Application {
                             btn1.setDisable(true);
                             btn2.setText("A");
                             btn2.setDisable(true);
-                            funBox.getChildren().remove(lblVote);
+                            vBox.getChildren().remove(labelDejaVote);
 
                         });
 
@@ -754,7 +754,9 @@ public class AppVote extends Application {
                     oos2.writeObject(req2);
                     oos2.flush();
                     stackPanePanel.toFront();
-                } catch (IOException ex) {
+                    getSondage();
+
+                } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
             });
@@ -776,6 +778,7 @@ public class AppVote extends Application {
                     root.getChildren().remove(chart);
                     root.getChildren().remove(StackVote);
                     root.getChildren().add(StackVote);
+
                     getSondage();
             } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
