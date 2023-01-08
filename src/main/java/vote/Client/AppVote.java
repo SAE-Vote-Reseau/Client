@@ -123,9 +123,9 @@ public class AppVote extends Application {
     String ColorHex = "#191919";
     String ColorStyle="#5F5AA2";
 
-    Image img = new Image("file:./resources/blahaj.png");
+    Image img = new Image("file:src/main/resources/blahaj.png");
 
-    ImageView gifBlahaj = new ImageView(new Image("file:./resources/blahspinny.gif"));
+    ImageView gifBlahaj = new ImageView(new Image("file:src/main/resources/blahspinny.gif"));
     ImageView logo = new ImageView(img);
     public volatile Label label;
 
@@ -198,7 +198,7 @@ public class AppVote extends Application {
 
 
         primaryStage.setScene(MainScene);
-        primaryStage.getIcons().add(new Image("file:./resources/blahajLogo.png"));
+        primaryStage.getIcons().add(new Image("file:src/main/resources/blahajLogo.png"));
         primaryStage.show();
     }
 
