@@ -1,36 +1,82 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Client:jar">
+  <artifact type="jar" build-on-make="true" name="Client:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Client_jar</output-path>
-    <root id="archive" name="Client_jar.jar">
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/src/main/META-INF/MANIFEST.MF" />
-      </element>
+    <root id="archive" name="Client.jar">
       <element id="module-output" name="Client.main" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.7.2/2573770b46b8a199ed5f6b0f96fb99e468bfe891/junit-platform-engine-1.7.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-base/19/430bec8a362edb04667972905a7cb34cb165d6d/javafx-base-19-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/19/44dbcee46b9e902629bb4e0f409b3d6e10ac8e8b/javafx-graphics-19.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.0/fc9dff4bb36d627bdc553de77e1f17efd790876c/apiguardian-api-1.1.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-media/19/50bd7cd35678978ec898cf5f9fcca631a106d29d/javafx-media-19-win.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.7.2/f4b4079732a9c537983324cfa4e46655f21d2c56/junit-jupiter-api-5.7.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.7.2/9415680a889f00b8205a094c5c487bc69dc7077d/junit-jupiter-engine-5.7.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-fxml/19/abc5441a6421ceac26bb512e96351bf641ee6004/javafx-fxml-19-win.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-base/19/80d1a58c5345af9151f1b4b01f8eb92f86fe49ae/javafx-base-19.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apiguardian/apiguardian-api/1.1.0/fc9dff4bb36d627bdc553de77e1f17efd790876c/apiguardian-api-1.1.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/19/8e98e30310844cd501f4e03fa3415f6d897c7215/javafx-graphics-19-win.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-controls/19/9f8d4f41bff27d8ac956b21e5223eaaebb7d9413/javafx-controls-19.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.7.2/34adfea6c13fc4a996cf38cdad80800ce850d198/junit-platform-commons-1.7.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-swing/19/562878eb4e5c1d5acebf1e40953c6557196e10ff/javafx-swing-19-win.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/19/44dbcee46b9e902629bb4e0f409b3d6e10ac8e8b/javafx-graphics-19.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-controls/19/1227311caf209b428591fb7d2cca27e25f06f0b4/javafx-controls-19-win.jar" path-in-jar="/" />
-      <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
-      <element id="library" level="project" name="Gradle: mysql:mysql-connector-java:8.0.28" />
-      <element id="library" level="project" name="Gradle: com.google.protobuf:protobuf-java:3.11.4" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-base:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-base:win:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-controls:win:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-graphics:win:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-graphics:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-media:win:19" />
-      <element id="library" level="project" name="Gradle: org.openjfx:javafx-swing:win:19" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.7.2/2573770b46b8a199ed5f6b0f96fb99e468bfe891/junit-platform-engine-1.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/19/8e98e30310844cd501f4e03fa3415f6d897c7215/javafx-graphics-19-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-swing/19/562878eb4e5c1d5acebf1e40953c6557196e10ff/javafx-swing-19-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/3.11.4/7ec0925cc3aef0335bbc7d57edfd42b0f86f8267/protobuf-java-3.11.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-base/19/80d1a58c5345af9151f1b4b01f8eb92f86fe49ae/javafx-base-19.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openjfx/javafx-base/19/430bec8a362edb04667972905a7cb34cb165d6d/javafx-base-19-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.2.0/28c11eb91f9b6d8e200631d46e20a7f407f2a046/opentest4j-1.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.7.2/9415680a889f00b8205a094c5c487bc69dc7077d/junit-jupiter-engine-5.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/8.0.28/33678b1729d4f832b9e4bcb2d5bbd67940920a7a/mysql-connector-java-8.0.28.jar" path-in-jar="/" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-time-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-stdio-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-string-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/msvcp140_2.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-runtime-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-process-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/ucrtbase.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/jfxmedia.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/javafx_font.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/glib-lite.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/msvcp140_1.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/prism_common.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/vcruntime140_1.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/msvcp140.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/glass.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-private-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/decora_sse.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-utility-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/fxplugins.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/jfxwebkit.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/javafx_iio.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/gstreamer-lite.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/prism_d3d.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/prism_sw.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/vcruntime140.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-math-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-multibyte-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-locale-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-heap-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-environment-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-filesystem-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-convert-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-crt-conio-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-util-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-timezone-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-sysinfo-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-synch-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-synch-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-string-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-rtlsupport-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-profile-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-processthreads-l1-1-1.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-processthreads-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-processenvironment-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-namedpipe-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-memory-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-localization-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-libraryloader-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-interlocked-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-heap-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-handle-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-file-l2-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-file-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-file-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-errorhandling-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-debug-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-datetime-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-console-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/OneDrive/Bureau/javafx-sdk-19/bin/api-ms-win-core-console-l1-1-0.dll" />
     </root>
   </artifact>
 </component>
