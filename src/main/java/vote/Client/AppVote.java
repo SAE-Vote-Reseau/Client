@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -72,18 +73,29 @@ public class AppVote extends Application {
 
     StackPane stackPanePanelHisto = new StackPane();
 
+    StackPane StackPolitique = new StackPane();
+    StackPane stackPanePanelChangeMdp = new StackPane();
     SplitPane splitPane = new SplitPane();
     Button btn1 = new Button();
     Button btn2 = new Button();
 
     Button btn3 = new Button();
     Button btn4 = new Button("Historique");
+
+    Button btnDeco = new Button("Deconnexion");
+
+    Button ChangerMdp = new Button("Changer mot de passe");
+
+    Button PolitiqueButton = new Button("Politique de confidentialité");
     Label lblVote = new Label();
 
     boolean PanelOpen = false;
 
     boolean PaneHistoryOpen = false;
 
+    boolean PaneChangeMdpOpen = false;
+
+    boolean PolitiqueOpen = false;
 
     public volatile Group groupPie;
 
@@ -111,13 +123,13 @@ public class AppVote extends Application {
     String ColorHex = "#191919";
     String ColorStyle="#5F5AA2";
 
-    Image img = new Image("file:src/main/resources/blahaj.png");
+    Image img = new Image("file:./resources/blahaj.png");
 
-    ImageView gifBlahaj = new ImageView(new Image("file:src/main/resources/blahspinny.gif"));
+    ImageView gifBlahaj = new ImageView(new Image("file:./resources/blahspinny.gif"));
     ImageView logo = new ImageView(img);
     public volatile Label label;
 
-    public volatile Label labelDejaVote= new Label("");;
+    public volatile Label labelDejaVote= new Label("");
 
    volatile Sondage sondage;
 
@@ -139,7 +151,7 @@ public class AppVote extends Application {
     private String ip = "127.0.0.1"; // par defaut
     private int port = 5565;
 
-    boolean isSondageNull = false;
+    boolean Deconnexion = false;
 
 
     @Override
@@ -186,7 +198,7 @@ public class AppVote extends Application {
 
 
         primaryStage.setScene(MainScene);
-        primaryStage.getIcons().add(new Image("file:src/main/resources/blahajLogo.png"));
+        primaryStage.getIcons().add(new Image("file:./resources/blahajLogo.png"));
         primaryStage.show();
     }
 
@@ -197,10 +209,12 @@ public class AppVote extends Application {
     public void mainScene(boolean isAdmin, Stage primaryStage, String ssid) throws IOException, ClassNotFoundException {
         root.getChildren().remove(vBoxLOGIN);
         getSondage();
-        initButtons();
+        initButtons(primaryStage);
         initPaneAndBox(isAdmin, primaryStage,ssid);
 
     }
+
+
 
     public void ConnexionScene(Stage primaryStage){
         TextField Username = new TextField();
@@ -213,6 +227,7 @@ public class AppVote extends Application {
 
         VBox vBoxMDPOUBLIE = new VBox();
         Button PasswordForgot = new Button("Mot de passe oublie");
+
         PasswordForgot.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
         PasswordForgot.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -244,6 +259,7 @@ public class AppVote extends Application {
                     vBoxMDPOUBLIE.setMaxHeight(200);
 
                     vBoxMDPOUBLIE.setStyle("-fx-background-color: " + ColorStyle + ";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+
 
 
                     button.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
@@ -304,6 +320,18 @@ public class AppVote extends Application {
         }});
 
 
+        PolitiqueButton.setStyle("-fx-background-color: #5F5AA2;-fx-text-fill: white;-fx-font-size: 15px;-fx-font-weight: bold;-fx-background-radius: 25px;");
+        PolitiqueButton.setOnAction(E -> {
+            PolitiqueOpen = !PolitiqueOpen;
+            if (PolitiqueOpen) {
+                PolitiqueScene();
+
+            } else {
+
+
+                root.getChildren().remove(StackPolitique);
+            }
+        });
 
 
 
@@ -317,20 +345,26 @@ public class AppVote extends Application {
         vBox2.setSpacing(10);
 
         hBox.getChildren().add(Connexion);
+        vBoxLOGIN.getChildren().clear();
         vBoxLOGIN.getChildren().addAll(logo,vBox2,hBox);
 
         logo.setFitHeight(110);
         logo.setPreserveRatio(true);
 
         vBoxLOGIN.setSpacing(10);
-
+        StackConnexion.getChildren().clear();
         StackConnexion.getChildren().add(vBoxLOGIN);
 
         StackConnexion.getChildren().add(PasswordForgot);
-        StackConnexion.setAlignment(PasswordForgot, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(PasswordForgot, Pos.BOTTOM_RIGHT);
         PasswordForgot.setTranslateX(-30);
         PasswordForgot.setTranslateY(-30);
+        StackConnexion.getChildren().add(PolitiqueButton);
+        StackPane.setAlignment(PolitiqueButton, Pos.BOTTOM_CENTER);
+        PolitiqueButton.setTranslateY(-30);
+
         root.getChildren().add(StackConnexion);
+
 
         vBoxLOGIN.setAlignment(Pos.CENTER);
 
@@ -419,10 +453,45 @@ public class AppVote extends Application {
             }
         });
         Connexion.disableProperty().bind(Bindings.isEmpty(Username.textProperty()).or(Bindings.isEmpty(Password.textProperty()).or(Bindings.isEmpty(IP.textProperty()).or(Bindings.isEmpty(Port.textProperty())))));
+        buttonStack.toFront();
     }
 
+    private void PolitiqueScene() {
+
+        StackPolitique.setStyle("-fx-background-color: #af8bf1;-fx-border-radius: 25px;-fx-background-radius: 25px;");
+        StackPolitique.setMaxHeight(550);
+        StackPolitique.setMaxWidth(700);
+        VBox vBoxPolitique = new VBox();
+        vBoxPolitique.setSpacing(10);
+        vBoxPolitique.setAlignment(Pos.CENTER);
+        Label labelPolitique = new Label("Politique de confidentialité");
+        Text textPolitique = new Text("Dans le cadre de son activité, SharkVote, dont le siège social est situé à Montpellier, est amenée à collecter et à traiter des informations dont certaines sont qualifiées de « données personnelles ». SharkVote attache une grande importance au respect de la vie privée, et n’utilise que des données de manière responsable et confidentielle et dans une finalité précise.\n" +
+                "\n" +
+                "Données personnelles\n" +
+                "Sur l’application de vote SharkVote, seuls les données transmis directement, via un formulaire de contact remplis par l'admin de l'entreprise dans laquelle vous travaillez, sont utilisés. Seul le nom, prénom et l’email fourni par l’entreprise est obligatoire.\n" +
+                "\n" +
+                "Utilisation des données\n" +
+                "Les données que vous nous transmettez directement sont utilisées dans le but de vous permettre de voter sur les référendums établis par l’entreprise dans laquelle vous travaillez. Les votes sont chiffrés pour conserver l’anonymat de chaque voteur, SharkVote et le client n’a pas accès à vos votes de manière personnelle et peut seulement voir le résultat du vote. Seul les admins de l'entreprise a accès a votre identité (nom, prénom).\n" +
+                "\n" +
+                "Base légale\n" +
+                "Les données personnelles ne sont collectées qu’après consentement obligatoire de l’utilisateur. Ce consentement est valablement recueilli (boutons et cases à cocher), libre, clair et sans équivoque.\n" +
+                "\n" +
+                "Durée de conservation\n" +
+                "Les données seront sauvegardées pour une durée maximale d’1 an en cas d'inactivité.\n" +
+                "\n" +
+                "Vos droits concernant les données personnelles\n" +
+                "Vous avez le droit de consultation, de modification ou d’effacement sur l’ensemble de vos données personnelles.");
+
+        textPolitique.setWrappingWidth(600);
+        labelPolitique.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 42px; -fx-font-weight: bold;");
+        //set the text in white
+        textPolitique.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 13px;");
 
 
+        vBoxPolitique.getChildren().addAll(labelPolitique, textPolitique);
+        StackPolitique.getChildren().add(vBoxPolitique);
+        root.getChildren().add(StackPolitique);
+    }
 
 
     public synchronized void ResultScene(){
@@ -470,7 +539,7 @@ public class AppVote extends Application {
     public void sendVote(int choice) throws IOException {
         //envoie un vote au serveur
         try {
-            //crÃ©ation d'un socket client
+            //création d'un socket client
             Message voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
 
             SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -480,7 +549,7 @@ public class AppVote extends Application {
            RequeteVote req = new RequeteVote(voteChiffre,connexionReponse.getSsid());
             out.writeObject(req);
             out.flush();
-            System.out.println("vote envoyÃ©");
+            System.out.println("vote envoyé");
 
 
         } catch (IOException e) {
@@ -488,12 +557,18 @@ public class AppVote extends Application {
         }
     }
 
+
+
     public synchronized void getSondage() throws IOException, ClassNotFoundException {
         TimerTask getSondageTask = new TimerTask(){
 
             @Override
             public void run() {
                 System.out.println("get sondage");
+                if(Deconnexion){
+                    this.cancel();
+                    System.out.println("get sondage annulé");
+                }
                 try{
                     SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
                     Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
@@ -505,10 +580,10 @@ public class AppVote extends Application {
                     java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
                     out.writeObject(req);
                     out.flush();
-                    //recupÃ¨re l'inputstream du socket
+                    //recupère l'inputstream du socket
                     java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
 
-                    //lit le message envoyÃ© par le serveur
+                    //lit le message envoyé par le serveur
                     sondage = (Sondage) in.readObject();
 
                     if (sondage == null) {
@@ -548,10 +623,38 @@ public class AppVote extends Application {
                                  labelDejaVote.setText("");
                                  labelDejaVote.setVisible(false);
                             }
+
+
                        });
 
                     }
-                    //fermeture du flux d'entrÃ©e
+                    SSLSocketFactory socketFactory2 = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                    Socket socket2 = (SSLSocket) socketFactory2.createSocket(ip, port);
+
+                    RequeteEstConnecte req2 = new RequeteEstConnecte(connexionReponse.getSsid());
+                    ObjectOutputStream out2 = new java.io.ObjectOutputStream(socket2.getOutputStream());
+                    out2.writeObject(req2);
+                    out2.flush();
+
+                    //recupère l'inputstream du socket
+                    java.io.ObjectInputStream in2 = new java.io.ObjectInputStream(socket2.getInputStream());
+
+                    boolean estConnecte = (boolean) in2.readObject();
+                    System.out.println("est connecté: " + estConnecte);
+                    if(!estConnecte){
+                        if(!Deconnexion){
+                        System.out.println("vous avez été déconnecté");
+                        Platform.runLater(()->{
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Erreur");
+                            alert.setHeaderText("Vous avez été déconnecté du serveur");
+                            alert.setContentText("Veuillez vous reconnecter");
+                            alert.showAndWait();
+                            System.exit(0);
+                        });}
+                    }
+
+                    //fermeture du flux d'entrée
                     in.close();
                     //fermeture du flux de sortie
                     out.close();
@@ -559,12 +662,15 @@ public class AppVote extends Application {
 
 
                 }catch (IOException | ClassNotFoundException e){
+                    Platform.runLater(()->{
+                        System.out.println("Erreur lors de la récupération du sondage");
+                        lblVote.setText("La connexion au serveur n'est pas disponible");
+                        btn1.setText("N");
+                        btn1.setDisable(true);
+                        btn2.setText("A");
+                        btn2.setDisable(true);
+                    });
 
-                    lblVote.setText("La connexion au serveur n'est pas disponible");
-                    btn1.setText("N");
-                    btn1.setDisable(true);
-                    btn2.setText("A");
-                    btn2.setDisable(true);
 
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -578,6 +684,7 @@ public class AppVote extends Application {
             }
 
 
+
         };
         Timer timerSondage = new Timer("SondageTimer");
         timerSondage.scheduleAtFixedRate(getSondageTask, 0, 5000);
@@ -586,7 +693,24 @@ public class AppVote extends Application {
 
 
 
-    public void initButtons(){
+    public void initButtons(Stage primaryStage) {
+
+        btnDeco.setOnAction(event -> {
+            root.getChildren().remove(StackVote);
+            root.getChildren().remove(btn3);
+            root.getChildren().remove(btn4);
+            root.getChildren().remove(btnDeco);
+            root.getChildren().remove(ChangerMdp);
+            root.getChildren().remove(stackPanePanel);
+            root.getChildren().remove(label);
+
+            Deconnexion = true;
+            deconnexion(primaryStage);
+            buttonStack.toFront();
+
+        });
+
+
         btn1.setOnAction(e -> {
             switchScene(btn1.getText());
             try {
@@ -658,16 +782,72 @@ public class AppVote extends Application {
             }
         });
 
+        btnDeco.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btnDeco.setEffect(new Glow());
+            }
+        });
+        btnDeco.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                btnDeco.setEffect(null);
+            }
+        });
 
+        ChangerMdp.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ChangerMdp.setEffect(new Glow());
+            }
+        });
+        ChangerMdp.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ChangerMdp.setEffect(null);
+            }
+        });
+
+        PolitiqueButton.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PolitiqueButton.setEffect(new Glow());
+            }
+        });
+        PolitiqueButton.addEventHandler(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PolitiqueButton.setEffect(null);
+            }
+        });
 
 
 
         lblVote.setFont(new javafx.scene.text.Font(26));
         lblVote.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        btnDeco.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn1.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn2.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn3.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        ChangerMdp.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn4.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+    }
+
+    private void deconnexion(Stage primaryStage) {
+        try {
+            SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            SSLSocket sslsocket = (SSLSocket) sslsocketfactory.createSocket(ip, port);
+
+            RequeteDeconnexion req = new RequeteDeconnexion(connexionReponse.getSsid());
+            ObjectOutputStream out = new ObjectOutputStream(sslsocket.getOutputStream());
+            out.writeObject(req);
+            out.flush();
+
+            ConnexionScene(primaryStage);
+
+        }  catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void AdminPanelScene(Stage primaryStage){
@@ -731,7 +911,7 @@ public class AppVote extends Application {
                 rafraichirUtilisateurs(listView);
                 stackPanePanel.setTranslateX(290);
             });
-            Button btnCreateSondage = new Button("CrÃ©er sondage");
+            Button btnCreateSondage = new Button("Créer sondage");
             Button btn4Panel = new Button("Quitter");
             btn4Panel.setOnAction(e -> {
                 root.getChildren().remove(stackPanePanel);
@@ -771,7 +951,7 @@ public class AppVote extends Application {
 
                     RequeteArreterSondage req = new RequeteArreterSondage(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                    System.out.println("arrÃªt du sondage");
+                    System.out.println("arrêt du sondage");
                     oos.writeObject(req);
                     oos.flush();
 
@@ -840,7 +1020,7 @@ public void creerSondage(){
     paneUser.setMaxHeight(300);
     paneUser.setMaxWidth(300);
 
-    Text text = new Text("CrÃ©er un sondage");
+    Text text = new Text("Créer un sondage");
     text.setFont(new javafx.scene.text.Font(26));
     text.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #891bd7;  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
 
@@ -917,14 +1097,16 @@ public void creerSondage(){
     public void initPaneAndBox(boolean isAdmin,Stage primaryStage, String ssid){
 
 
-
+        funBox.getChildren().clear();
         funBox.getChildren().add(lblVote);
         logo.setPreserveRatio(true);
         logo.setFitHeight(100);
+        vBox.getChildren().clear();
         vBox.getChildren().add(logo);
         vBox.getChildren().add(labelDejaVote);
         vBox.getChildren().add(funBox);
         vBox.getChildren().add(hBox);
+        hBox.getChildren().clear();
         hBox.getChildren().addAll(btn1, btn2);
 
 
@@ -939,11 +1121,17 @@ public void creerSondage(){
             });
         }
         root.getChildren().add(btn4);
+        root.getChildren().add(btnDeco);
+        root.getChildren().add(ChangerMdp);
         StackPane.setAlignment(btn4, Pos.BOTTOM_LEFT);
         StackPane.setAlignment(btn3, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(btnDeco, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(ChangerMdp, Pos.BOTTOM_LEFT);
         btn4.setText("Historique");
+        StackPane.setMargin(btnDeco, new Insets(0, 40, 85, 0));
         StackPane.setMargin(btn3, new Insets(0, 40, 40, 0));
         StackPane.setMargin(btn4, new Insets(0, 0, 40, 40));
+        StackPane.setMargin(ChangerMdp, new Insets(0, 0, 85, 40));
 
         btn4.setOnAction(e -> {
             PaneHistoryOpen = !PaneHistoryOpen;
@@ -957,13 +1145,25 @@ public void creerSondage(){
             }
         });
 
+        ChangerMdp.setOnAction(e -> {
+             PaneChangeMdpOpen = !PaneChangeMdpOpen;
+            if (PaneChangeMdpOpen) {
+                ChangeMdpScene(primaryStage);
+                StackVote.setVisible(false);
+            } else {
+                StackVote.setVisible(true);
+
+                root.getChildren().remove(stackPanePanelChangeMdp);
+            }
+        });
+
         vBox.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
         funBox.setAlignment(Pos.CENTER);
         funBox.setSpacing(20);
         hBox.setSpacing(50);
         vBox.setSpacing(70);
-
+        StackVote.getChildren().clear();
         StackVote.getChildren().add(vBox);
         StackVote.setMaxHeight(300);
 
@@ -974,6 +1174,8 @@ public void creerSondage(){
         root.getChildren().add(StackVote);
 
     }
+
+
 
     private boolean aDejaVote(String ssid){
         try{
@@ -992,6 +1194,65 @@ public void creerSondage(){
         }
     }
 
+    private void ChangeMdpScene(Stage primaryStage) {
+        stackPanePanelChangeMdp = new StackPane();
+        stackPanePanelChangeMdp.setStyle("-fx-background-color: #891bd7;-fx-border-color: #000000;-fx-border-width: 2px;-fx-border-radius: 10px;-fx-background-radius: 10px;");
+        stackPanePanelChangeMdp.setMaxHeight(300);
+        stackPanePanelChangeMdp.setMaxWidth(400);
+        VBox vboxMDP = new VBox();
+        vboxMDP.setSpacing(10);
+        vboxMDP.setAlignment(Pos.CENTER);
+        Label labelMDP = new Label("Changer de mot de passe");
+        labelMDP.setStyle("-fx-text-fill: #ffffff;-fx-font-size: 26px;-fx-font-weight: bold;");
+
+        TextField textFieldMDP = new TextField();
+        textFieldMDP.setPromptText("Ancien mot de passe");
+        textFieldMDP.setPadding(new Insets(10, 10, 10, 10));
+        textFieldMDP.setMaxWidth(200);
+        TextField textFieldMDP2 = new TextField();
+        textFieldMDP2.setPromptText("Nouveau mot de passe");
+        textFieldMDP2.setPadding(new Insets(10, 10, 10, 10));
+        textFieldMDP2.setMaxWidth(200);
+        TextField textFieldMDP3 = new TextField();
+        textFieldMDP3.setPromptText("Confirmer mot de passe");
+        textFieldMDP3.setPadding(new Insets(10, 10, 10, 10));
+        textFieldMDP3.setMaxWidth(200);
+        Button btnMDP = new Button("Valider");
+        btnMDP.setStyle("-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        vboxMDP.getChildren().addAll(labelMDP,textFieldMDP, textFieldMDP2, textFieldMDP3, btnMDP);
+
+        stackPanePanelChangeMdp.getChildren().add(vboxMDP);
+        StackPane.setAlignment(vboxMDP, Pos.CENTER);
+        root.getChildren().add(stackPanePanelChangeMdp);
+        btnMDP.setOnAction(e -> {
+            if (textFieldMDP.getText().equals("") || textFieldMDP2.getText().equals("") || textFieldMDP3.getText().equals("")) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Erreur");
+                alert.setContentText("Veuillez remplir tous les champs");
+                alert.showAndWait();
+            } else {
+                if (textFieldMDP2.getText().equals(textFieldMDP3.getText())) {
+                    try {
+                        SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+                        Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
+
+                        RequeteChangePassword req = new RequeteChangePassword( textFieldMDP2.getText(),connexionReponse.getSsid());
+                        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                        oos.writeObject(req);
+                        oos.flush();
+                        System.out.println("Envoi de la requete");
+                        root.getChildren().remove(stackPanePanelChangeMdp);
+                        StackVote.setVisible(true);
+
+        } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+    }
     private void HistoriqueScene(Stage primaryStage) {
 
             StackVote.setVisible(false);
@@ -1143,12 +1404,12 @@ public void creerSondage(){
 
     public void supprimerUtilisateur(ListView<String> view) {
         try {
-            //si l'utilisateur sÃ©lectionner est le mÃªme que celui qui est connectÃ©
+            //si l'utilisateur sélectionner est le même que celui qui est connecté
             if (view.getSelectionModel().getSelectedItem().equals(connexionReponse.getEmploye().getNom() + " " + connexionReponse.getEmploye().getPrenom())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erreur");
                 alert.setHeaderText("Vous ne pouvez pas supprimer votre propre compte");
-                alert.setContentText("Veuillez vous dÃ©connecter et supprimer votre compte depuis un autre compte");
+                alert.setContentText("Veuillez vous déconnecter et supprimer votre compte depuis un autre compte");
                 alert.showAndWait();
             } else {
 
