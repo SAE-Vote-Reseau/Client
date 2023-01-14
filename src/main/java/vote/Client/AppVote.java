@@ -597,8 +597,7 @@ public class AppVote extends Application {
                             vBox.getChildren().remove(labelDejaVote);
 
                             root.getChildren().remove(chart);
-                            root.getChildren().remove(StackVote);
-                            root.getChildren().add(StackVote);
+
                         });
                     }
                     else if (sondage.getResultat() != null){
