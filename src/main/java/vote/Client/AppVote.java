@@ -86,7 +86,7 @@ public class AppVote extends Application {
 
     Button ChangerMdp = new Button("Changer mot de passe");
 
-    Button PolitiqueButton = new Button("Politique de confidentialité");
+    Button PolitiqueButton = new Button("Politique de confidentialitÃ©");
     Label lblVote = new Label();
 
     boolean PanelOpen = false;
@@ -464,23 +464,23 @@ public class AppVote extends Application {
         VBox vBoxPolitique = new VBox();
         vBoxPolitique.setSpacing(10);
         vBoxPolitique.setAlignment(Pos.CENTER);
-        Label labelPolitique = new Label("Politique de confidentialité");
-        Text textPolitique = new Text("Dans le cadre de son activité, SharkVote, dont le siège social est situé à Montpellier, est amenée à collecter et à traiter des informations dont certaines sont qualifiées de « données personnelles ». SharkVote attache une grande importance au respect de la vie privée, et n’utilise que des données de manière responsable et confidentielle et dans une finalité précise.\n" +
+        Label labelPolitique = new Label("Politique de confidentialitÃ©");
+        Text textPolitique = new Text("Dans le cadre de son activitÃ©, SharkVote, dont le siÃ¨ge social est situÃ© Ã  Montpellier, est amenÃ©e Ã  collecter et Ã  traiter des informations dont certaines sont qualifiÃ©es de Â« donnÃ©es personnelles Â». SharkVote attache une grande importance au respect de la vie privÃ©e, et nâ€™utilise que des donnÃ©es de maniÃ¨re responsable et confidentielle et dans une finalitÃ© prÃ©cise.\n" +
                 "\n" +
-                "Données personnelles\n" +
-                "Sur l’application de vote SharkVote, seuls les données transmis directement, via un formulaire de contact remplis par l'admin de l'entreprise dans laquelle vous travaillez, sont utilisés. Seul le nom, prénom et l’email fourni par l’entreprise est obligatoire.\n" +
+                "DonnÃ©es personnelles\n" +
+                "Sur lâ€™application de vote SharkVote, seuls les donnÃ©es transmis directement, via un formulaire de contact remplis par l'admin de l'entreprise dans laquelle vous travaillez, sont utilisÃ©s. Seul le nom, prÃ©nom et lâ€™email fourni par lâ€™entreprise est obligatoire.\n" +
                 "\n" +
-                "Utilisation des données\n" +
-                "Les données que vous nous transmettez directement sont utilisées dans le but de vous permettre de voter sur les référendums établis par l’entreprise dans laquelle vous travaillez. Les votes sont chiffrés pour conserver l’anonymat de chaque voteur, SharkVote et le client n’a pas accès à vos votes de manière personnelle et peut seulement voir le résultat du vote. Seul les admins de l'entreprise a accès a votre identité (nom, prénom).\n" +
+                "Utilisation des donnÃ©es\n" +
+                "Les donnÃ©es que vous nous transmettez directement sont utilisÃ©es dans le but de vous permettre de voter sur les rÃ©fÃ©rendums Ã©tablis par lâ€™entreprise dans laquelle vous travaillez. Les votes sont chiffrÃ©s pour conserver lâ€™anonymat de chaque voteur, SharkVote et le client nâ€™a pas accÃ¨s Ã  vos votes de maniÃ¨re personnelle et peut seulement voir le rÃ©sultat du vote. Seul les admins de l'entreprise a accÃ¨s a votre identitÃ© (nom, prÃ©nom).\n" +
                 "\n" +
-                "Base légale\n" +
-                "Les données personnelles ne sont collectées qu’après consentement obligatoire de l’utilisateur. Ce consentement est valablement recueilli (boutons et cases à cocher), libre, clair et sans équivoque.\n" +
+                "Base lÃ©gale\n" +
+                "Les donnÃ©es personnelles ne sont collectÃ©es quâ€™aprÃ¨s consentement obligatoire de lâ€™utilisateur. Ce consentement est valablement recueilli (boutons et cases Ã  cocher), libre, clair et sans Ã©quivoque.\n" +
                 "\n" +
-                "Durée de conservation\n" +
-                "Les données seront sauvegardées pour une durée maximale d’1 an en cas d'inactivité.\n" +
+                "DurÃ©e de conservation\n" +
+                "Les donnÃ©es seront sauvegardÃ©es pour une durÃ©e maximale dâ€™1 an en cas d'inactivitÃ©.\n" +
                 "\n" +
-                "Vos droits concernant les données personnelles\n" +
-                "Vous avez le droit de consultation, de modification ou d’effacement sur l’ensemble de vos données personnelles.");
+                "Vos droits concernant les donnÃ©es personnelles\n" +
+                "Vous avez le droit de consultation, de modification ou dâ€™effacement sur lâ€™ensemble de vos donnÃ©es personnelles.");
 
         textPolitique.setWrappingWidth(600);
         labelPolitique.setStyle("-fx-text-fill: #ffffff; -fx-font-size: 42px; -fx-font-weight: bold;");
@@ -539,7 +539,7 @@ public class AppVote extends Application {
     public void sendVote(int choice) throws IOException {
         //envoie un vote au serveur
         try {
-            //création d'un socket client
+            //crÃ©ation d'un socket client
             Message voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
 
             SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -549,7 +549,7 @@ public class AppVote extends Application {
            RequeteVote req = new RequeteVote(voteChiffre,connexionReponse.getSsid());
             out.writeObject(req);
             out.flush();
-            System.out.println("vote envoyé");
+            System.out.println("vote envoyÃ©");
 
 
         } catch (IOException e) {
@@ -567,7 +567,7 @@ public class AppVote extends Application {
                 System.out.println("get sondage");
                 if(Deconnexion){
                     this.cancel();
-                    System.out.println("get sondage annulé");
+                    System.out.println("get sondage annulÃ©");
                 }
                 try{
                     SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -580,10 +580,10 @@ public class AppVote extends Application {
                     java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(socket.getOutputStream());
                     out.writeObject(req);
                     out.flush();
-                    //recupère l'inputstream du socket
+                    //recupÃ¨re l'inputstream du socket
                     java.io.ObjectInputStream in = new java.io.ObjectInputStream(socket.getInputStream());
 
-                    //lit le message envoyé par le serveur
+                    //lit le message envoyÃ© par le serveur
                     sondage = (Sondage) in.readObject();
 
                     if (sondage == null) {
@@ -640,25 +640,25 @@ public class AppVote extends Application {
                     out2.writeObject(req2);
                     out2.flush();
 
-                    //recupère l'inputstream du socket
+                    //recupÃ¨re l'inputstream du socket
                     java.io.ObjectInputStream in2 = new java.io.ObjectInputStream(socket2.getInputStream());
 
                     boolean estConnecte = (boolean) in2.readObject();
-                    System.out.println("est connecté: " + estConnecte);
+                    System.out.println("est connectÃ©: " + estConnecte);
                     if(!estConnecte){
                         if(!Deconnexion){
-                        System.out.println("vous avez été déconnecté");
+                        System.out.println("vous avez Ã©tÃ© dÃ©connectÃ©");
                         Platform.runLater(()->{
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Erreur");
-                            alert.setHeaderText("Vous avez été déconnecté du serveur");
+                            alert.setHeaderText("Vous avez Ã©tÃ© dÃ©connectÃ© du serveur");
                             alert.setContentText("Veuillez vous reconnecter");
                             alert.showAndWait();
                             System.exit(0);
                         });}
                     }
 
-                    //fermeture du flux d'entrée
+                    //fermeture du flux d'entrÃ©e
                     in.close();
                     //fermeture du flux de sortie
                     out.close();
@@ -667,7 +667,7 @@ public class AppVote extends Application {
 
                 }catch (IOException | ClassNotFoundException e){
                     Platform.runLater(()->{
-                        System.out.println("Erreur lors de la récupération du sondage");
+                        System.out.println("Erreur lors de la rÃ©cupÃ©ration du sondage");
                         lblVote.setText("La connexion au serveur n'est pas disponible");
                         btn1.setText("N");
                         btn1.setDisable(true);
@@ -915,7 +915,7 @@ public class AppVote extends Application {
                 rafraichirUtilisateurs(listView);
                 stackPanePanel.setTranslateX(290);
             });
-            Button btnCreateSondage = new Button("Créer sondage");
+            Button btnCreateSondage = new Button("CrÃ©er sondage");
             Button btn4Panel = new Button("Quitter");
             btn4Panel.setOnAction(e -> {
                 root.getChildren().remove(stackPanePanel);
@@ -955,7 +955,7 @@ public class AppVote extends Application {
 
                     RequeteArreterSondage req = new RequeteArreterSondage(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                    System.out.println("arrêt du sondage");
+                    System.out.println("arrÃªt du sondage");
                     oos.writeObject(req);
                     oos.flush();
 
@@ -1022,7 +1022,7 @@ public void creerSondage(){
     paneUser.setMaxHeight(300);
     paneUser.setMaxWidth(300);
 
-    Text text = new Text("Créer un sondage");
+    Text text = new Text("CrÃ©er un sondage");
     text.setFont(new javafx.scene.text.Font(26));
     text.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: #891bd7;  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
 
@@ -1406,12 +1406,12 @@ public void creerSondage(){
 
     public void supprimerUtilisateur(ListView<String> view) {
         try {
-            //si l'utilisateur sélectionner est le même que celui qui est connecté
+            //si l'utilisateur sÃ©lectionner est le mÃªme que celui qui est connectÃ©
             if (view.getSelectionModel().getSelectedItem().equals(connexionReponse.getEmploye().getNom() + " " + connexionReponse.getEmploye().getPrenom())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Erreur");
                 alert.setHeaderText("Vous ne pouvez pas supprimer votre propre compte");
-                alert.setContentText("Veuillez vous déconnecter et supprimer votre compte depuis un autre compte");
+                alert.setContentText("Veuillez vous dÃ©connecter et supprimer votre compte depuis un autre compte");
                 alert.showAndWait();
             } else {
 
