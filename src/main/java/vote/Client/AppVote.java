@@ -599,9 +599,11 @@ public class AppVote extends Application {
                         btn2.setText("A");
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
-                        if(!root.getChildren().contains(StackVote)){
+                        System.out.println(root.getChildren().size());
+                        if (root.getChildren().size()==7) {
+                            root.getChildren().remove(StackVote);
                             root.getChildren().add(StackVote);
-                        }
+                                                   }
 
 
 
