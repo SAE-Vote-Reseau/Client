@@ -123,9 +123,9 @@ public class AppVote extends Application {
     String ColorHex = "#191919";
     String ColorStyle="#5F5AA2";
 
-    Image img = new Image("file:src/main/resources/blahaj.png");
+    Image img = new Image("file:./resources/blahaj.png");
 
-    ImageView gifBlahaj = new ImageView(new Image("file:src/main/resources/blahspinny.gif"));
+    ImageView gifBlahaj = new ImageView(new Image("file:./resources/blahspinny.gif"));
     ImageView logo = new ImageView(img);
     public volatile Label label;
 
@@ -198,7 +198,7 @@ public class AppVote extends Application {
 
 
         primaryStage.setScene(MainScene);
-        primaryStage.getIcons().add(new Image("file:src/main/resources/blahajLogo.png"));
+        primaryStage.getIcons().add(new Image("file:./resources/blahajLogo.png"));
         primaryStage.show();
     }
 
@@ -587,6 +587,10 @@ public class AppVote extends Application {
                     sondage = (Sondage) in.readObject();
 
                     if (sondage == null) {
+                        root.getChildren().remove(chart);
+                        root.getChildren().remove(StackVote);
+                        root.getChildren().add(StackVote);
+
                         Platform.runLater(()->{lblVote.setText("Aucun sondage en cours");
                             btn1.setText("N");
                             btn1.setDisable(true);
@@ -955,9 +959,7 @@ public class AppVote extends Application {
                     oos.writeObject(req);
                     oos.flush();
 
-                    root.getChildren().remove(chart);
-                    root.getChildren().remove(StackVote);
-                    root.getChildren().add(StackVote);
+
 
                     getSondage();
             } catch (IOException | ClassNotFoundException ex) {
