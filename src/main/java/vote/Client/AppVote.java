@@ -71,6 +71,8 @@ public class AppVote extends Application {
 
     public static StackPane StackConnexion = new StackPane();
 
+    public static StackPane chartPane = new StackPane();
+
     StackPane stackPanePanelHisto = new StackPane();
 
     StackPane StackPolitique = new StackPane();
@@ -514,11 +516,13 @@ public class AppVote extends Application {
 
 
             chart = new PieChart(pieChartData);
-
-
-            root.getChildren().add(chart);
-            StackPane.setAlignment(chart,Pos.CENTER);
+            chartPane.getChildren().add(chart);
+            root.getChildren().remove(chartPane);
+            root.getChildren().add(chartPane);
+            StackPane.setAlignment(chartPane,Pos.CENTER);
             chart.setLegendSide(Side.LEFT);
+            chartPane.setMaxHeight(900);
+            chartPane.setMaxWidth(900);
            chart.setStyle("-fx-font-size: 26;-fx-scale-x: 0.66;-fx-scale-y:0.66;");
             chart.setLabelLineLength(0);
 
@@ -585,31 +589,32 @@ public class AppVote extends Application {
 
                     //lit le message envoyé par le serveur
                     sondage = (Sondage) in.readObject();
-
+                    Platform.runLater(()-> {
                     if (sondage == null) {
 
-                        Platform.runLater(()-> {
-                            lblVote.setText("Aucun sondage en cours");
-                            btn1.setText("N");
-                            btn1.setDisable(true);
-                            btn2.setText("A");
-                            btn2.setDisable(true);
-                            vBox.getChildren().remove(labelDejaVote);
+                        chartPane.setVisible(false);
+                        lblVote.setText("Aucun sondage en cours");
+                        btn1.setText("N");
+                        btn1.setDisable(true);
+                        btn2.setText("A");
+                        btn2.setDisable(true);
+                        vBox.getChildren().remove(labelDejaVote);
+                        if(!root.getChildren().contains(StackVote)){
+                            root.getChildren().add(StackVote);
+                        }
 
-                            root.getChildren().remove(chart);
 
-                        });
+
                     }
                     else if (sondage.getResultat() != null){
                         System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
-                        Platform.runLater(()->{
+
                             ResultScene();
-                        });
-                        cancel();
+                        chartPane.setVisible(true);
+
                     }
                     else {
-                        //set les valeurs du sondage
-                       Platform.runLater(()->{
+                        chartPane.setVisible(false);
                            lblVote.setText(sondage.getConsigne());
                            btn1.setDisable(false);
                            btn1.setText(sondage.getChoix1());
@@ -628,9 +633,10 @@ public class AppVote extends Application {
                             }
 
 
-                       });
+
 
                     }
+                    });
                     SSLSocketFactory socketFactory2 = (SSLSocketFactory) SSLSocketFactory.getDefault();
                     Socket socket2 = (SSLSocket) socketFactory2.createSocket(ip, port);
 
