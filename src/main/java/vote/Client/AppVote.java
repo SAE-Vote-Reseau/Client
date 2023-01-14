@@ -587,19 +587,19 @@ public class AppVote extends Application {
                     sondage = (Sondage) in.readObject();
 
                     if (sondage == null) {
-                        root.getChildren().remove(chart);
-                        root.getChildren().remove(StackVote);
-                        root.getChildren().add(StackVote);
 
-                        Platform.runLater(()->{lblVote.setText("Aucun sondage en cours");
+                        Platform.runLater(()-> {
+                            lblVote.setText("Aucun sondage en cours");
                             btn1.setText("N");
                             btn1.setDisable(true);
                             btn2.setText("A");
                             btn2.setDisable(true);
                             vBox.getChildren().remove(labelDejaVote);
 
+                            root.getChildren().remove(chart);
+                            root.getChildren().remove(StackVote);
+                            root.getChildren().add(StackVote);
                         });
-
                     }
                     else if (sondage.getResultat() != null){
                         System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
