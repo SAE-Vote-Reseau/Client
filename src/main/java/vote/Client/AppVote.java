@@ -600,8 +600,7 @@ public class AppVote extends Application {
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
                         System.out.println(root.getChildren().size());
-                        if (root.getChildren().contains(chart)||root.getChildren().size()==8||root.getChildren().size()==7) {
-                            chartPane.getChildren().clear();
+                        if (root.getChildren().contains(chart)||root.getChildren().size()==7) {
                             root.getChildren().remove(chart);
                             root.getChildren().remove(StackVote);
                             root.getChildren().add(StackVote);
@@ -612,9 +611,9 @@ public class AppVote extends Application {
                     }
                     else if (sondage.getResultat() != null){
                         System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
-                            chartPane.getChildren().clear();
+                            root.getChildren().remove(chart);
                             ResultScene();
-                        chartPane.setVisible(true);
+                        chart.setVisible(true);
 
                     }
                     else {
