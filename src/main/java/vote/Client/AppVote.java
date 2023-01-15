@@ -600,7 +600,7 @@ public class AppVote extends Application {
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
                         System.out.println(root.getChildren().size());
-                        if (root.getChildren().contains(chart)||root.getChildren().size()==7) {
+                        if (root.getChildren().contains(chart)||root.getChildren().size()==7||root.getChildren().size()==6) {
                             root.getChildren().remove(chart);
                             root.getChildren().remove(StackVote);
                             root.getChildren().add(StackVote);
