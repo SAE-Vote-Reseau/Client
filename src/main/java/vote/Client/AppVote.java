@@ -516,10 +516,10 @@ public class AppVote extends Application {
 
 
             chart = new PieChart(pieChartData);
-            chartPane.getChildren().add(chart);
-            root.getChildren().remove(chartPane);
-            root.getChildren().add(chartPane);
-            StackPane.setAlignment(chartPane,Pos.CENTER);
+            //chartPane.getChildren().add(chart);
+            root.getChildren().remove(chart);
+            root.getChildren().add(chart);
+            StackPane.setAlignment(chart,Pos.CENTER);
             chart.setLegendSide(Side.LEFT);
             chartPane.setMaxHeight(900);
             chartPane.setMaxWidth(900);
@@ -600,9 +600,9 @@ public class AppVote extends Application {
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
                         System.out.println(root.getChildren().size());
-                        if (root.getChildren().contains(chartPane)) {
+                        if (root.getChildren().contains(chart)) {
                             chartPane.getChildren().clear();
-                            root.getChildren().remove(chartPane);
+                            root.getChildren().remove(chart);
                             root.getChildren().remove(StackVote);
                             root.getChildren().add(StackVote);
                         }
