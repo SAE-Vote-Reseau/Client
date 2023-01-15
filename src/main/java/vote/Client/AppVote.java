@@ -947,9 +947,9 @@ public class AppVote extends Application {
                     oos2.writeObject(req2);
                     oos2.flush();
                     stackPanePanel.toFront();
-                    getSondage();
 
-                } catch (IOException | ClassNotFoundException ex) {
+
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             });
@@ -969,9 +969,7 @@ public class AppVote extends Application {
                     oos.flush();
 
 
-
-                    getSondage();
-            } catch (IOException | ClassNotFoundException ex) {
+            } catch (IOException  ex) {
                     throw new RuntimeException(ex);
                 }
             });
