@@ -610,7 +610,7 @@ public class AppVote extends Application {
                     }
                     else if (sondage.getResultat() != null){
                         System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
-
+                            chartPane.getChildren().clear();
                             ResultScene();
                         chartPane.setVisible(true);
 
