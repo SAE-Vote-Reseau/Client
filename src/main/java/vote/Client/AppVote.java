@@ -516,13 +516,13 @@ public class AppVote extends Application {
 
 
             chart = new PieChart(pieChartData);
-            //chartPane.getChildren().add(chart);
-            root.getChildren().remove(chart);
-            root.getChildren().add(chart);
-            StackPane.setAlignment(chart,Pos.CENTER);
+            chartPane.getChildren().add(chart);
+            root.getChildren().remove(chartPane);
+            root.getChildren().add(chartPane);
+            StackPane.setAlignment(chartPane,Pos.CENTER);
             chart.setLegendSide(Side.LEFT);
-            chartPane.setMaxHeight(900);
-            chartPane.setMaxWidth(900);
+            chartPane.setMaxHeight(700);
+            chartPane.setMaxWidth(1000);
            chart.setStyle("-fx-font-size: 26;-fx-scale-x: 0.66;-fx-scale-y:0.66;");
             chart.setLabelLineLength(0);
 
@@ -600,8 +600,9 @@ public class AppVote extends Application {
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
                         System.out.println(root.getChildren().size());
-                        if (root.getChildren().contains(chart)||root.getChildren().size()==7||root.getChildren().size()==6) {
-                            root.getChildren().remove(chart);
+                        if (root.getChildren().contains(chartPane)) {
+                            chartPane.getChildren().clear();
+                            root.getChildren().remove(chartPane);
                             root.getChildren().remove(StackVote);
                             root.getChildren().add(StackVote);
                         }
@@ -611,9 +612,9 @@ public class AppVote extends Application {
                     }
                     else if (sondage.getResultat() != null){
                         System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
-                            root.getChildren().remove(chart);
+                            chartPane.getChildren().clear();
                             ResultScene();
-                        chart.setVisible(true);
+                        chartPane.setVisible(true);
 
                     }
                     else {
@@ -946,9 +947,9 @@ public class AppVote extends Application {
                     oos2.writeObject(req2);
                     oos2.flush();
                     stackPanePanel.toFront();
+                    getSondage();
 
-
-                } catch (IOException ex) {
+                } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
             });
@@ -968,7 +969,9 @@ public class AppVote extends Application {
                     oos.flush();
 
 
-            } catch (IOException  ex) {
+
+                    getSondage();
+            } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
             });
