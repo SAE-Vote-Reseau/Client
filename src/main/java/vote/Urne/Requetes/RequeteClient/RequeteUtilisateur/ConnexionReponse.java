@@ -1,4 +1,4 @@
-package vote.Urne.Requete.RequeteClient.RequeteUtilisateur;
+package vote.Urne.Requetes.RequeteClient.RequeteUtilisateur;
 
 import vote.Urne.metier.Employe;
 

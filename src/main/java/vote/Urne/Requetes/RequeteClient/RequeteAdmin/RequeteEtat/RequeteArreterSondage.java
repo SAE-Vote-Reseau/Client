@@ -1,7 +1,7 @@
-package vote.Urne.Requete.RequeteClient.RequeteAdmin.RequeteEtat;
+package vote.Urne.Requetes.RequeteClient.RequeteAdmin.RequeteEtat;
 
 
-import vote.Urne.Requete.RequeteClient.Requete;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
 
 public class RequeteArreterSondage extends Requete {

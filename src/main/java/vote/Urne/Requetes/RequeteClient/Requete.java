@@ -1,7 +1,5 @@
-package vote.Urne.Requete.RequeteClient;
+package vote.Urne.Requetes.RequeteClient;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public abstract class Requete implements Serializable {

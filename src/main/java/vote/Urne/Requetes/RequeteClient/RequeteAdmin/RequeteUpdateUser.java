@@ -1,7 +1,7 @@
-package vote.Urne.Requete.RequeteClient.RequeteAdmin;
+package vote.Urne.Requetes.RequeteClient.RequeteAdmin;
 
 
-import vote.Urne.Requete.RequeteClient.Requete;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
 
 public class RequeteUpdateUser extends Requete {

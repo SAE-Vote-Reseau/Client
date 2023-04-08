@@ -1,11 +1,8 @@
-package vote.Urne.Requete.RequeteClient.RequeteAdmin;
+package vote.Urne.Requetes.RequeteClient.RequeteAdmin;
 
 
-import vote.Urne.Requete.RequeteClient.Requete;
-import vote.Urne.metier.EmployeManager;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 public class RequeteAddUser extends Requete {
     private static final long serialVersionUID = -4206407180651779866L;

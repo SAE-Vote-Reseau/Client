@@ -1,9 +1,6 @@
-package vote.Urne.Requete.RequeteClient.RequeteUtilisateur;
+package vote.Urne.Requetes.RequeteClient.RequeteUtilisateur;
 
-import vote.Urne.Requete.RequeteClient.Requete;
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
 public class RequeteEstConnecte extends Requete {
     private static final long serialVersionUID = -730437664822465754L;

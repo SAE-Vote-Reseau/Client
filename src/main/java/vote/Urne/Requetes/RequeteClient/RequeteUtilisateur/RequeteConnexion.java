@@ -1,6 +1,6 @@
-package vote.Urne.Requete.RequeteClient.RequeteUtilisateur;
+package vote.Urne.Requetes.RequeteClient.RequeteUtilisateur;
 
-import vote.Urne.Requete.RequeteClient.Requete;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
 public class RequeteConnexion extends Requete {
     private static final long serialVersionUID = -4031012286226927617L;

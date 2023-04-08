@@ -1,11 +1,7 @@
-package vote.Urne.Requete.RequeteClient.RequeteUtilisateur;
+package vote.Urne.Requetes.RequeteClient.RequeteUtilisateur;
 
 
-import vote.Urne.Requete.RequeteClient.Requete;
-
-
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import vote.Urne.Requetes.RequeteClient.Requete;
 
 public class RequeteGetADejaVote extends Requete {
     private static final long serialVersionUID = -726741156287474558L;
