@@ -552,7 +552,7 @@ public class AppVote extends Application {
            RequeteVote req = new RequeteVote(voteChiffre,connexionReponse.getSsid());
             out.writeObject(req);
             out.flush();
-            System.out.println("vote envoyé");
+        //    System.out.println("vote envoyé");
 
 
         } catch (IOException e) {
@@ -567,10 +567,10 @@ public class AppVote extends Application {
 
             @Override
             public void run() {
-                System.out.println("get sondage");
+           //     System.out.println("get sondage");
                 if(Deconnexion){
                     this.cancel();
-                    System.out.println("get sondage annulé");
+             //       System.out.println("get sondage annulé");
                 }
                 try{
                     SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -598,7 +598,7 @@ public class AppVote extends Application {
                         btn2.setText("A");
                         btn2.setDisable(true);
                         vBox.getChildren().remove(labelDejaVote);
-                        System.out.println(root.getChildren().size());
+                    //    System.out.println(root.getChildren().size());
                         if (root.getChildren().contains(chartPane)) {
                             chartPane.getChildren().clear();
                             root.getChildren().remove(chartPane);
@@ -610,7 +610,7 @@ public class AppVote extends Application {
 
                     }
                     else if (sondage.getResultat() != null){
-                        System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
+              //          System.out.println("Resultat du sondage: \n" + sondage.getChoix1() + ": " +(sondage.getNbVotant()-sondage.getResultat())+ "\n" + sondage.getChoix2() + ": " + sondage.getResultat() );
                             chartPane.getChildren().clear();
                             ResultScene();
                         chartPane.setVisible(true);
@@ -652,10 +652,10 @@ public class AppVote extends Application {
                     java.io.ObjectInputStream in2 = new java.io.ObjectInputStream(socket2.getInputStream());
 
                     boolean estConnecte = (boolean) in2.readObject();
-                    System.out.println("est connecté: " + estConnecte);
+                  //  System.out.println("est connecté: " + estConnecte);
                     if(!estConnecte){
                         if(!Deconnexion){
-                        System.out.println("vous avez été déconnecté");
+                       // System.out.println("vous avez été déconnecté");
                         Platform.runLater(()->{
                             Alert alert = new Alert(Alert.AlertType.ERROR);
                             alert.setTitle("Erreur");
@@ -675,7 +675,7 @@ public class AppVote extends Application {
 
                 }catch (IOException | ClassNotFoundException e){
                     Platform.runLater(()->{
-                        System.out.println("Erreur lors de la récupération du sondage");
+                   //     System.out.println("Erreur lors de la récupération du sondage");
                         lblVote.setText("La connexion au serveur n'est pas disponible");
                         btn1.setText("N");
                         btn1.setDisable(true);
@@ -699,7 +699,7 @@ public class AppVote extends Application {
 
         };
         Timer timerSondage = new Timer("SondageTimer");
-        timerSondage.scheduleAtFixedRate(getSondageTask, 0, 5000);
+        timerSondage.scheduleAtFixedRate(getSondageTask, 0, 1000);
 
     }
 
@@ -724,12 +724,7 @@ public class AppVote extends Application {
 
 
         btn1.setOnAction(e -> {
-            switchScene(btn1.getText());
-            try {
-                sendVote(0);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            confirmVote(0, 1);
 
         });
         btn1.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
@@ -747,12 +742,7 @@ public class AppVote extends Application {
 
 
         btn2.setOnAction(e -> {
-            switchScene(btn2.getText());
-            try {
-                sendVote(1);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            confirmVote(1,2);
         });
 
         btn2.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
@@ -843,6 +833,61 @@ public class AppVote extends Application {
         btn3.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         ChangerMdp.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
         btn4.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+    }
+
+    private void confirmVote(int choice,int choixbtn){
+        StackPane rootVote = new StackPane();
+        rootVote.setStyle("-fx-background-color: "+"#af8bf1"+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        rootVote.setMaxHeight(500);
+        rootVote.setMaxWidth(500);
+
+
+        Text text = new Text("Voulez-vous voter pour \""+sondage.getChoix(choice)+"\" ?");
+        text.setFont(new javafx.scene.text.Font(26));
+
+        text.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        Button btnOui = new Button("Oui");
+        btnOui.setFont(new javafx.scene.text.Font(20));
+        btnOui.setPrefSize(100, 50);
+        btnOui.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+        Button btnNon = new Button("Non");
+        btnNon.setPrefSize(100, 50);
+        btnNon.setFont(new javafx.scene.text.Font(20));
+        btnNon.setStyle("-fx-font-family: 'Open Sans'; -fx-font-weight: bold; -fx-text-fill: #000000; -fx-background-color: "+ColorStyle+";  -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;");
+
+        btnOui.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(choixbtn==1)
+                    switchScene(btn1.getText());
+                else if(choixbtn==2)
+                    switchScene(btn2.getText());
+
+
+                try {
+                    sendVote(choice);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                root.getChildren().remove(rootVote);
+            }
+        });
+        btnNon.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                root.getChildren().remove(rootVote);
+            }
+        });
+        rootVote.getChildren().addAll(text, btnOui, btnNon);
+        StackPane.setAlignment(text, Pos.CENTER);
+        StackPane.setMargin(text, new Insets(0, 0, 90, 0));
+        StackPane.setAlignment(btnOui, Pos.CENTER_LEFT);
+        StackPane.setMargin(btnOui, new Insets(0, 0, 0, 80));
+        StackPane.setAlignment(btnNon, Pos.CENTER_RIGHT);
+        StackPane.setMargin(btnNon, new Insets(0, 80, 0, 0));
+        root.getChildren().add(rootVote);
+
+
     }
 
     private void deconnexion(Stage primaryStage) {
@@ -963,7 +1008,7 @@ public class AppVote extends Application {
 
                     RequeteArreterSondage req = new RequeteArreterSondage(connexionReponse.getSsid());
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                    System.out.println("arrêt du sondage");
+                 //   System.out.println("arrêt du sondage");
                     oos.writeObject(req);
                     oos.flush();
 
@@ -1290,9 +1335,9 @@ public void creerSondage(){
                     HBox hBox = new HBox();
                     hBox.setSpacing(10);
                     hBox.setAlignment(Pos.CENTER);
-                    System.out.println(sondage.getNbVotant());
-                    System.out.println(sondage.getResultat());
-                    System.out.println(" ");
+                //    System.out.println(sondage.getNbVotant());
+              //      System.out.println(sondage.getResultat());
+                //    System.out.println(" ");
                     Label label = new Label(sondage.getConsigne() + " : " + sondage.getChoix1() + " (" + (sondage.getNbVotant()-sondage.getResultat()) + "), " + sondage.getChoix2() + " (" + sondage.getResultat() + ")");
                     label.setStyle("-fx-font-size: 20px;");
                     hBox.getChildren().add(label);
