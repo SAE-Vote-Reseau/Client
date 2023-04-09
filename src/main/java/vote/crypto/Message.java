@@ -23,8 +23,8 @@ public class Message implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return "c1: " + c1 + " c2: " + c2;
+    public String toString() {
+        return "c1=" + c1 + ", c2=" + c2;
     }
 
 }

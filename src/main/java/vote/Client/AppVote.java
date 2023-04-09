@@ -44,6 +44,7 @@ import vote.Urne.metier.Employe;
 import vote.Urne.metier.Sondage;
 import vote.crypto.ElGamal;
 import vote.crypto.Message;
+import vote.crypto.VerifiedMessage;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -53,6 +54,7 @@ import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -543,7 +545,7 @@ public class AppVote extends Application {
         //envoie un vote au serveur
         try {
             //création d'un socket client
-            Message voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
+            VerifiedMessage voteChiffre = ElGamal.encrypt(BigInteger.valueOf(choice),sondage.getPublicKeyInfo());
 
             SSLSocketFactory socketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             Socket socket = (SSLSocket) socketFactory.createSocket(ip, port);
@@ -557,6 +559,10 @@ public class AppVote extends Application {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+
         }
     }
 
